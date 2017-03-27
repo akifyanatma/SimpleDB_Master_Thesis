@@ -187,4 +187,10 @@ public class Buffer {
       blk = contents.append(filename);
       pins = 0;
    }
+   
+   //Akif
+   public void writeContent()
+   {
+	  flush();
+   }
 }

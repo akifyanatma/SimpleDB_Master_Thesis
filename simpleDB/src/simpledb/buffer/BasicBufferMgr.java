@@ -1,6 +1,7 @@
 package simpledb.buffer;
 
 import simpledb.file.*;
+import simpledb.server.SimpleDB;
 
 /**
  * Manages the pinning and unpinning of buffers to blocks.
@@ -30,7 +31,7 @@ class BasicBufferMgr {
       for (int i=0; i<numbuffs; i++)
          bufferpool[i] = new Buffer();
    }
-   
+    
    /**
     * Flushes the dirty buffers modified by the specified transaction.
     * @param txnum the transaction's id number
@@ -115,5 +116,11 @@ class BasicBufferMgr {
          if (!buff.isPinned())
          return buff;
       return null;
+   }
+   
+   //Akif
+   public void writeBuffContent(Buffer buff)
+   {
+	   buff.writeContent();
    }
 }

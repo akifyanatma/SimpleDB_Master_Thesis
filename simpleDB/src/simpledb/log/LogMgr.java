@@ -1,6 +1,10 @@
 package simpledb.log;
 
 import simpledb.server.SimpleDB;
+import simpledb.buffer.Buffer; //Akif
+import simpledb.buffer.BufferMgr;
+import simpledb.buffer.PageFormatter;
+import simpledb.buffer.ZeroPageFormatter;
 import simpledb.file.*;
 import static simpledb.file.Page.*;
 import java.util.*;
@@ -23,9 +27,11 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    public static final int LAST_POS = 0;
 
    private String logfile;
-   private Page mypage = new Page();
+   //private Page mypage = new Page();
    private Block currentblk;
    private int currentpos;
+   
+   private Buffer mybuffer; //Akif
 
    /**
     * Creates the manager for the specified log file.
@@ -40,16 +46,21 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * is called first.
     * @param logfile the name of the log file
     */
+//   public LogMgr(String logfile) {
+//      this.logfile = logfile;
+//      int logsize = SimpleDB.fileMgr().size(logfile);
+//      if (logsize == 0)
+//         appendNewBlock();
+//      else {
+//         currentblk = new Block(logfile, logsize-1);
+//         mypage.read(currentblk);
+//         currentpos = getLastRecordPosition() + INT_SIZE;
+//      }
+//   }
+   
+   //Akif
    public LogMgr(String logfile) {
-      this.logfile = logfile;
-      int logsize = SimpleDB.fileMgr().size(logfile);
-      if (logsize == 0)
-         appendNewBlock();
-      else {
-         currentblk = new Block(logfile, logsize-1);
-         mypage.read(currentblk);
-         currentpos = getLastRecordPosition() + INT_SIZE;
-      }
+	  this.logfile = logfile;
    }
 
    /**
@@ -101,12 +112,21 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * currentpos.  Then increments currentpos by the size of the value.
     * @param val the integer or string to be added to the page
     */
+//   private void appendVal(Object val) {
+//      if (val instanceof String)
+//         mypage.setString(currentpos, (String)val);
+//      else
+//         mypage.setInt(currentpos, (Integer)val);
+//      currentpos += size(val);
+//   }
+   
+   //Akif
    private void appendVal(Object val) {
-      if (val instanceof String)
-         mypage.setString(currentpos, (String)val);
-      else
-         mypage.setInt(currentpos, (Integer)val);
-      currentpos += size(val);
+	  if (val instanceof String)
+		  mybuffer.setString(currentpos, (String)val, -1, -1);
+	  else
+	      mybuffer.setInt(currentpos, (Integer)val, -1, -1);
+	  currentpos += size(val);
    }
 
    /**
@@ -136,19 +156,36 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    /**
     * Writes the current page to the log file.
     */
+//   private void flush() {
+//      mypage.write(currentblk);
+//   }
+   
+   //Akif
    private void flush() {
-      mypage.write(currentblk);
+	   SimpleDB.bufferMgr().writeBuffContent(mybuffer);
    }
 
    /**
     * Clear the current page, and append it to the log file.
     */
+//   private void appendNewBlock() {
+//      setLastRecordPosition(0);
+//      currentpos = INT_SIZE;
+//      currentblk = mypage.append(logfile);
+//   }
+   
+   //Akif
    private void appendNewBlock() {
-      setLastRecordPosition(0);
-      currentpos = INT_SIZE;
-      currentblk = mypage.append(logfile);
+	  BufferMgr bm = SimpleDB.bufferMgr();
+	  if(mybuffer != null)
+		  bm.unpin(mybuffer);
+	  currentpos = INT_SIZE;
+	  PageFormatter pf = new ZeroPageFormatter();  
+	  mybuffer = bm.pinNew(logfile, pf);
+	  currentblk = mybuffer.block();
+	  setLastRecordPosition(0);
    }
-
+   
    /**
     * Sets up a circular chain of pointers to the records in the page.
     * There is an integer added to the end of each log record
@@ -156,17 +193,46 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * The first four bytes of the page contain an integer whose value
     * is the offset of the integer for the last log record in the page.
     */
+//   private void finalizeRecord() {
+//      mypage.setInt(currentpos, getLastRecordPosition());
+//      setLastRecordPosition(currentpos);
+//      currentpos += INT_SIZE;
+//   }
+   
+   //Akif
    private void finalizeRecord() {
-      mypage.setInt(currentpos, getLastRecordPosition());
-      setLastRecordPosition(currentpos);
-      currentpos += INT_SIZE;
+	   mybuffer.setInt(currentpos, getLastRecordPosition(), -1, -1);
+	   setLastRecordPosition(currentpos);
+	   currentpos += INT_SIZE;
    }
 
+//   private int getLastRecordPosition() {
+//      return mypage.getInt(LAST_POS);
+//   }
+   
+   //Akif
    private int getLastRecordPosition() {
-      return mypage.getInt(LAST_POS);
+	  return mybuffer.getInt(LAST_POS);
    }
 
+//   private void setLastRecordPosition(int pos) {
+//      mypage.setInt(LAST_POS, pos);
+//   }
+   
+   //Akif
    private void setLastRecordPosition(int pos) {
-      mypage.setInt(LAST_POS, pos);
+	   mybuffer.setInt(LAST_POS, pos, -1, -1);
+   }
+   
+   //Akif
+   public void takeFirstBuffer() {
+     int logsize = SimpleDB.fileMgr().size(logfile);
+     if (logsize == 0)
+        appendNewBlock();
+     else {
+        currentblk = new Block(logfile, logsize-1);
+        mybuffer = SimpleDB.bufferMgr().pin(currentblk);
+        currentpos = getLastRecordPosition() + INT_SIZE;
+     }
    }
 }

@@ -121,4 +121,10 @@ public class BufferMgr {
    private boolean waitingTooLong(long starttime) {
       return System.currentTimeMillis() - starttime > MAX_TIME;
    }
+   
+   //Akif
+   public void writeBuffContent(Buffer buff)
+   {
+	   bufferMgr.writeBuffContent(buff);
+   }
 }
