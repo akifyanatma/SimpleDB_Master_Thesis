@@ -26,6 +26,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private Page mypage = new Page();
    private Block currentblk;
    private int currentpos;
+   
+   private int mostRecentFlushedLSN;//Akif
+   private int mostRecentFlushedPos;//Akif
 
    /**
     * Creates the manager for the specified log file.
@@ -40,16 +43,32 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * is called first.
     * @param logfile the name of the log file
     */
+//   public LogMgr(String logfile) {
+//      this.logfile = logfile;
+//      int logsize = SimpleDB.fileMgr().size(logfile);
+//      if (logsize == 0)
+//         appendNewBlock();
+//      else {
+//         currentblk = new Block(logfile, logsize-1);
+//         mypage.read(currentblk);
+//         currentpos = getLastRecordPosition() + INT_SIZE;
+//      }
+//   }
+   
+   //Akif
    public LogMgr(String logfile) {
-      this.logfile = logfile;
-      int logsize = SimpleDB.fileMgr().size(logfile);
-      if (logsize == 0)
-         appendNewBlock();
-      else {
-         currentblk = new Block(logfile, logsize-1);
-         mypage.read(currentblk);
-         currentpos = getLastRecordPosition() + INT_SIZE;
-      }
+	   this.logfile = logfile;
+	   int logsize = SimpleDB.fileMgr().size(logfile);
+	   if (logsize == 0)
+		   appendNewBlock();
+	   else {
+		   currentblk = new Block(logfile, logsize-1);
+	       mypage.read(currentblk);
+	       currentpos = getLastRecordPosition() + INT_SIZE;
+	   }
+	   
+	   mostRecentFlushedLSN = -1;
+	   mostRecentFlushedPos = -1;
    }
 
    /**
@@ -58,9 +77,15 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * All earlier log records will also be written to disk.
     * @param lsn the LSN of a log record
     */
+//   public void flush(int lsn) {
+//      if (lsn >= currentLSN())
+//         flush();
+//   }
+   
+   //Akif
    public void flush(int lsn) {
-      if (lsn >= currentLSN())
-         flush();
+	   if (lsn >= currentLSN() && !(mostRecentFlushedLSN == currentLSN() && mostRecentFlushedPos == currentpos))
+		   flush();
    }
 
    /**
@@ -136,17 +161,33 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    /**
     * Writes the current page to the log file.
     */
+//   private void flush() {
+//      mypage.write(currentblk);
+//   }
+   
+   //Akif
    private void flush() {
-      mypage.write(currentblk);
+	   mypage.write(currentblk);
+	   mostRecentFlushedLSN = currentLSN();
+	   mostRecentFlushedPos = currentpos;
    }
 
    /**
     * Clear the current page, and append it to the log file.
     */
+//   private void appendNewBlock() {
+//      setLastRecordPosition(0);
+//      currentpos = INT_SIZE;
+//      currentblk = mypage.append(logfile);
+//   }
+   
+   //Akif
    private void appendNewBlock() {
-      setLastRecordPosition(0);
-      currentpos = INT_SIZE;
-      currentblk = mypage.append(logfile);
+	   setLastRecordPosition(0);
+	   currentpos = INT_SIZE;
+	   currentblk = mypage.append(logfile);
+	   mostRecentFlushedLSN = currentLSN();
+	   mostRecentFlushedPos = 0;
    }
 
    /**
