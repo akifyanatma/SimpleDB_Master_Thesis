@@ -25,6 +25,9 @@ public class FileMgr {
    private File dbDirectory;
    private boolean isNew;
    private Map<String,FileChannel> openFiles = new HashMap<String,FileChannel>();
+   
+   private int RIO;//Akif
+   private int WIO;//Akif
 
    /**
     * Creates a file manager for the specified database.
@@ -35,19 +38,38 @@ public class FileMgr {
     * Files for all temporary tables (i.e. tables beginning with "temp") are deleted.
     * @param dbname the name of the directory that holds the database
     */
+//   public FileMgr(String dbname) {
+//      String homedir = System.getProperty("user.home");
+//      dbDirectory = new File(homedir, dbname);
+//      isNew = !dbDirectory.exists();
+//
+//      // create the directory if the database is new
+//      if (isNew && !dbDirectory.mkdir())
+//         throw new RuntimeException("cannot create " + dbname);
+//
+//      // remove any leftover temporary tables
+//      for (String filename : dbDirectory.list())
+//         if (filename.startsWith("temp"))
+//         new File(dbDirectory, filename).delete();
+//   }
+   
+   //Akif
    public FileMgr(String dbname) {
-      String homedir = System.getProperty("user.home");
-      dbDirectory = new File(homedir, dbname);
-      isNew = !dbDirectory.exists();
+	   String homedir = System.getProperty("user.home");
+	   dbDirectory = new File(homedir, dbname);
+	   isNew = !dbDirectory.exists();
 
-      // create the directory if the database is new
-      if (isNew && !dbDirectory.mkdir())
-         throw new RuntimeException("cannot create " + dbname);
+	   // create the directory if the database is new
+	   if (isNew && !dbDirectory.mkdir())
+		   throw new RuntimeException("cannot create " + dbname);
 
-      // remove any leftover temporary tables
-      for (String filename : dbDirectory.list())
-         if (filename.startsWith("temp"))
-         new File(dbDirectory, filename).delete();
+	   // remove any leftover temporary tables
+	   for (String filename : dbDirectory.list())
+		   if (filename.startsWith("temp"))
+	       new File(dbDirectory, filename).delete();
+	   
+	   RIO = 0;
+	   WIO = 0;
    }
 
    /**
@@ -55,15 +77,28 @@ public class FileMgr {
     * @param blk a reference to a disk block
     * @param bb  the bytebuffer
     */
+//   synchronized void read(Block blk, ByteBuffer bb) {
+//      try {
+//         bb.clear();
+//         FileChannel fc = getFile(blk.fileName());
+//         fc.read(bb, blk.number() * BLOCK_SIZE);
+//      }
+//      catch (IOException e) {
+//         throw new RuntimeException("cannot read block " + blk);
+//      }
+//   }
+   
+   //Akif
    synchronized void read(Block blk, ByteBuffer bb) {
-      try {
-         bb.clear();
-         FileChannel fc = getFile(blk.fileName());
-         fc.read(bb, blk.number() * BLOCK_SIZE);
-      }
-      catch (IOException e) {
-         throw new RuntimeException("cannot read block " + blk);
-      }
+	   try {
+		   bb.clear();
+	       FileChannel fc = getFile(blk.fileName());
+	       fc.read(bb, blk.number() * BLOCK_SIZE);
+	       RIO++;
+	   }
+	   catch (IOException e) {
+	       throw new RuntimeException("cannot read block " + blk);
+	   }
    }
 
    /**
@@ -71,15 +106,28 @@ public class FileMgr {
     * @param blk a reference to a disk block
     * @param bb  the bytebuffer
     */
+//   synchronized void write(Block blk, ByteBuffer bb) {
+//      try {
+//         bb.rewind();
+//         FileChannel fc = getFile(blk.fileName());
+//         fc.write(bb, blk.number() * BLOCK_SIZE);
+//      }
+//      catch (IOException e) {
+//         throw new RuntimeException("cannot write block" + blk);
+//      }
+//   }
+   
+   //Akif
    synchronized void write(Block blk, ByteBuffer bb) {
-      try {
-         bb.rewind();
-         FileChannel fc = getFile(blk.fileName());
-         fc.write(bb, blk.number() * BLOCK_SIZE);
-      }
-      catch (IOException e) {
-         throw new RuntimeException("cannot write block" + blk);
-      }
+	   try {
+		   bb.rewind();
+	       FileChannel fc = getFile(blk.fileName());
+	       fc.write(bb, blk.number() * BLOCK_SIZE);
+	       WIO++;
+	   }
+	   catch (IOException e) {
+		   throw new RuntimeException("cannot write block" + blk);
+	   }
    }
 
    /**
@@ -138,5 +186,17 @@ public class FileMgr {
          openFiles.put(filename, fc);
       }
       return fc;
+   }
+   
+   //Akif
+   public void printAndResetRIO() {
+	   System.out.println("Number of disk block is read: " + RIO);
+	   RIO = 0;
+   }
+   
+   //Akif
+   public void printAndResetWIO() {
+	   System.out.println("Number of disk block is written: " + WIO);
+	   WIO = 0;
    }
 }
