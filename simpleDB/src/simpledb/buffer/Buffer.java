@@ -14,6 +14,8 @@ import simpledb.file.*;
  * @author Edward Sciore
  */
 public class Buffer {
+   private int id; //Akif
+   private SimpleDB.bufferTypes type; //Akif
    private Page contents = new Page();
    private Block blk = null;
    private int pins = 0;
@@ -34,7 +36,13 @@ public class Buffer {
     * {@link simpledb.server.SimpleDB#initFileAndLogMgr(String)} or
     * is called first.
     */
-   public Buffer() {}
+//   public Buffer() {}
+   
+   //Akif
+   public Buffer(int pId, SimpleDB.bufferTypes pType) {
+	   id = pId;
+	   type = pType;
+   }
    
    /**
     * Returns the integer value at the specified offset of the
@@ -189,8 +197,17 @@ public class Buffer {
    }
    
    //Akif
-   public void writeContent()
-   {
+   public int getId() {
+	   return id;
+   }
+   
+   //Akif
+   public SimpleDB.bufferTypes getType() {
+	   return type;
+   }
+   
+   //Akif
+   public void writeContent() {
 	  flush();
    }
 }

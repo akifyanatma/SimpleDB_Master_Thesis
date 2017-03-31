@@ -36,7 +36,7 @@ class LogIterator implements Iterator<BasicLogRecord> {
    //Akif
    LogIterator(Block blk) {
 	   this.blk = blk;
-	   buff = SimpleDB.bufferMgr().pin(blk);
+	   buff = SimpleDB.bufferMgr().pin(blk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
 	   currentrec = buff.getInt(LogMgr.LAST_POS);
    }
    
@@ -91,7 +91,7 @@ class LogIterator implements Iterator<BasicLogRecord> {
 	   if(buff != null)
 		   bm.unpin(buff);
 	   blk = new Block(blk.fileName(), blk.number()-1);
-	   bm.pin(blk);
+	   bm.pin(blk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
 	   currentrec = buff.getInt(LogMgr.LAST_POS);
    }
 }

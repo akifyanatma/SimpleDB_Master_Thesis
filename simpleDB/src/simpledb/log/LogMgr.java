@@ -181,7 +181,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 		  bm.unpin(mybuffer);
 	  currentpos = INT_SIZE;
 	  PageFormatter pf = new ZeroPageFormatter();  
-	  mybuffer = bm.pinNew(logfile, pf);
+	  mybuffer = bm.pinNew(logfile, pf, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
 	  currentblk = mybuffer.block();
 	  setLastRecordPosition(0);
    }
@@ -231,7 +231,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
         appendNewBlock();
      else {
         currentblk = new Block(logfile, logsize-1);
-        mybuffer = SimpleDB.bufferMgr().pin(currentblk);
+        mybuffer = SimpleDB.bufferMgr().pin(currentblk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
         currentpos = getLastRecordPosition() + INT_SIZE;
      }
    }
