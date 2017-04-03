@@ -209,4 +209,9 @@ public class BufferMgr {
    {
 	   bufferMgr.writeBuffContent(buff);
    }
+   
+   //Akif
+   public String listBuffer() {
+	   return bufferMgr.listBuffer();
+   }
 }

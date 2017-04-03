@@ -48,7 +48,7 @@ class BasicBufferMgr {
 	   unpinnedOtherBuffList = new ArrayList<Buffer>();
 	   int numLogBuffs = (int) (numbuffs*0.1);
 	   if(numLogBuffs<2)
-		   numLogBuffs = 2;
+		   numLogBuffs = 3;
 	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
 	      
 	   for (int i=0; i<numbuffs; i++) {
@@ -99,6 +99,19 @@ class BasicBufferMgr {
    //Akif
    synchronized Buffer pin(Block blk, SimpleDB.bufferTypes pBuffType) {
 	   Buffer buff = findExistingBuffer(blk);
+	   
+	   //Aranan blok map icindeki bufferlardan birinde bulunmussa ve unpinned listelerinde de yer alýyorsa
+	   //unpinned listelerinden cikarilmalidir.
+	   if(buff != null) {
+		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+			   unpinnedLogBuffList.remove(buff);
+		   }
+		   else {
+			   unpinnedOtherBuffList.remove(buff);
+		   }
+	   }
+		   
+	   
 	   	if (buff == null) {
 	   		buff = chooseUnpinnedBuffer(pBuffType);
 	   		if (buff == null)
@@ -240,5 +253,45 @@ class BasicBufferMgr {
    public void writeBuffContent(Buffer buff)
    {
 	   buff.writeContent();
+   }
+   
+   //Akif
+   public String listBuffer() {	   
+	   int id;
+	   String fileName ="";
+	   int blockNo;
+	   int pinCount;
+	   String bufferStates = "";
+	   
+	   for (Buffer buff : bufferpool) {
+		   id = buff.getId();
+		   bufferStates += String.valueOf(id);
+		   bufferStates += "\\";
+		   
+		   Block block = buff.block();
+		   if(block != null) {
+			   fileName = block.fileName();
+			   blockNo = block.number();			   			   
+			   bufferStates += fileName;
+			   bufferStates += "-";
+			   bufferStates += String.valueOf(blockNo);			   		   
+		   }
+		   else {
+			   bufferStates += "...-..."; //Buffer henuz kullanilmamis
+		   }
+		   bufferStates += "\\";
+		   
+		   pinCount = buff.getPins();
+		   if(pinCount == 0) {
+			   bufferStates += "u  ";
+		   }
+		   else {
+			   bufferStates += String.valueOf(pinCount);	
+			   bufferStates += "  ";
+		   }
+	   } 
+	   bufferStates += "\n";
+	   
+	   return bufferStates;
    }
 }

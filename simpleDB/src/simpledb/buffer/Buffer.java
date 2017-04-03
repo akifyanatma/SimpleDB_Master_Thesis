@@ -208,6 +208,11 @@ public class Buffer {
    
    //Akif
    public void writeContent() {
-	  flush();
+	   contents.write(blk);
+   }
+   
+   //Akif
+   public int getPins() {
+	   return pins;
    }
 }
