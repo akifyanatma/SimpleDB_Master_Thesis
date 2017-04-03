@@ -49,17 +49,18 @@ class BasicBufferMgr {
 	   int numLogBuffs = (int) (numbuffs*0.1);
 	   if(numLogBuffs<2)
 		   numLogBuffs = 3;
+	   
 	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
 	      
-	   for (int i=0; i<numbuffs; i++) {
-		   if(i<numLogBuffs) {
-			   bufferpool[i] = new Buffer(i, SimpleDB.bufferTypes.LOG_BUFF_TYPE); //Bufferlara id ve tip eklendi.
-			   unpinnedLogBuffList.add(bufferpool[i]);
-		   }
-		   else {
+	   for (int i=0; i<numbuffs; i++) {		   
+		   if(i<numbuffs - numLogBuffs) {
 			   bufferpool[i] = new Buffer(i, SimpleDB.bufferTypes.OTHER_BUFF_TYPE); //Bufferlara id ve tip eklendi.
 			   unpinnedOtherBuffList.add(bufferpool[i]);
-		   }		   
+		   }
+		   else {
+			   bufferpool[i] = new Buffer(i, SimpleDB.bufferTypes.LOG_BUFF_TYPE); //Bufferlara id ve tip eklendi.
+			   unpinnedLogBuffList.add(bufferpool[i]);
+		   }	   
 	   }	   
    }
    
