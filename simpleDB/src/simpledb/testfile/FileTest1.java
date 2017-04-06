@@ -1,4 +1,4 @@
-package simpledb.test;
+package simpledb.testfile;
 
 import static org.junit.Assert.*;
 

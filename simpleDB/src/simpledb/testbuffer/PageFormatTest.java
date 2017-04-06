@@ -1,4 +1,4 @@
-package simpledb.test;
+package simpledb.testbuffer;
 
 import static org.junit.Assert.*;
 

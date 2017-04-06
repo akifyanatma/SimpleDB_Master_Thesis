@@ -1,4 +1,4 @@
-package simpledb.test;
+package simpledb.testbuffer;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +11,37 @@ import simpledb.file.Block;
 import simpledb.file.FileMgr;
 import simpledb.file.Page;
 import simpledb.server.SimpleDB;
+
+///**
+//This testcase tests LRU policy.
+//In this test program new buffer manager is created, last 3 buffer is allocated for log manager.
+//But new log manager is not created, so log file's last block is not buffered this these buffers. 
+//
+//* Buffer state format: "buffer_id"\"file_name - block_no"\"pin_counter" 
+//* If buffer is EMPTY, prints nothing: "buffer_id\___-___\"u" "
+//* "pin_counter"= 1,2,3,...
+//* IF buffer is unpinned, prints "u".
+//* 
+//* The output for this test case:
+//* Buffer State: 0\...-...\"u"  1\...-...\"u" 2\...-...\"u" 3\...-...\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-0\1  1\student.tbl-1\1  2\...-...\"u"  3\...-...\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-0\1  1\student.tbl-1\1  2\student.tbl-2\1  3\student.tbl-3\1  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-0\"u"  1\student.tbl-1\"u"  2\student.tbl-2\"u"  3\student.tbl-3\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* # of available buffers: 4
+//* Buffer State: 0\student.tbl-0\"u"  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-3\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-3\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\1  2\student.tbl-4\1  3\student.tbl-3\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-3\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\1  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\2  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\3  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\2  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\1  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\"u"  2\student.tbl-4\1  3\student.tbl-6\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\1  1\student.tbl-1\1  2\student.tbl-4\1  3\student.tbl-10\1  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"  
+//* Buffer State: 0\student.tbl-5\"u"  1\student.tbl-1\"u"  2\student.tbl-4\"u"  3\student.tbl-10\"u"  4\...-...\"u"  5\...-...\"u"  6\...-...\"u"
+//* 
+//*/
 
 public class LRUTest1 {
 
@@ -30,6 +61,7 @@ public class LRUTest1 {
 		System.out.println("myfile size:" + fileSize + "\n");
 		
 		BufferMgr bm = new BufferMgr(7);  // initialize a new "smaller" buffer pool.
+		bm.setReplacementPolicy(SimpleDB.bufferReplacementPolicy.LRU);
 		System.out.println("Buffer State: " + bm.listBuffer());
 		
 		Buffer b0 = bm.pin(new Block("myfile", 0));
@@ -83,3 +115,4 @@ public class LRUTest1 {
 	}
 
 }
+

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import simpledb.file.*;
 import simpledb.server.SimpleDB;
+import simpledb.server.SimpleDB.bufferReplacementPolicy;
 
 /**
  * Manages the pinning and unpinning of buffers to blocks.
@@ -19,6 +20,8 @@ class BasicBufferMgr {
    private ArrayList<Buffer> unpinnedLogBuffList; //unpinned edilmis olan log bufferlarini tutacak olan liste
    private ArrayList<Buffer> unpinnedOtherBuffList; //log islemleri haricinde unpinned edilmis olan bufferlari tutacak olan liste
    private HashMap<Block, Buffer> loadedBuffMap; //Buffer havuzunda alinan bufferlari tutmak icin map
+   private SimpleDB.bufferReplacementPolicy replacementPolicy; //Unpin durumundaki bufferlari secmek icin strateji secimi
+   
    
    /**
     * Creates a buffer manager having the specified number 
@@ -42,6 +45,7 @@ class BasicBufferMgr {
    
    //Akif
    BasicBufferMgr(int numbuffs) {
+	   replacementPolicy = SimpleDB.bufferReplacementPolicy.LRU;
 	   bufferpool = new Buffer[numbuffs];
 	   loadedBuffMap = new HashMap<Block, Buffer>();
 	   unpinnedLogBuffList = new ArrayList<Buffer>();
@@ -235,19 +239,59 @@ class BasicBufferMgr {
    
    //Akif
    private Buffer chooseUnpinnedBuffer(SimpleDB.bufferTypes pBuffType) {	   
-	   //Aranan listedeki ilk buffer kullanilacak
-	   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
-		   if(unpinnedLogBuffList.size() != 0)
-			   return unpinnedLogBuffList.remove(0);
-		   else
-			   return null;
+	   
+	   if(replacementPolicy == SimpleDB.bufferReplacementPolicy.LRU) {
+		   //Aranan listedeki ilk buffer kullanilacak
+		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+			   if(unpinnedLogBuffList.size() != 0)
+				   return unpinnedLogBuffList.remove(0);
+			   else
+				   return null;
+		   }
+		   else {
+			   if(unpinnedOtherBuffList.size() != 0)
+				   return unpinnedOtherBuffList.remove(0);
+			   else
+				   return null;
+		   }
+	   }
+	   else if(replacementPolicy == SimpleDB.bufferReplacementPolicy.MRU) {
+		   //Aranan listedeki son buffer kullanilacak
+		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+			   if(unpinnedLogBuffList.size() != 0)
+				   return unpinnedLogBuffList.remove(unpinnedLogBuffList.size()-1);
+			   else
+				   return null;
+		   }
+		   else {
+			   if(unpinnedOtherBuffList.size() != 0)
+				   return unpinnedOtherBuffList.remove(unpinnedOtherBuffList.size()-1);
+			   else
+				   return null;
+		   }
 	   }
 	   else {
-		   if(unpinnedOtherBuffList.size() != 0)
-			   return unpinnedOtherBuffList.remove(0);
-		   else
+		   //Naive stratejisinin uygulanmasi
+		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+			   for (Buffer buff : bufferpool) {
+				   if(!buff.isPinned() && buff.getType() == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+					   unpinnedLogBuffList.remove(buff);
+					   return buff;   
+				   }				   
+			   }
 			   return null;
-	   }	   
+		   }
+		   else {
+			   for (Buffer buff : bufferpool) {
+				   if(!buff.isPinned() && buff.getType() == SimpleDB.bufferTypes.OTHER_BUFF_TYPE) {
+					   unpinnedOtherBuffList.remove(buff);
+					   return buff;   
+				   }				   
+			   }
+			   return null;
+		   }
+	   }
+	      
    }
    
    //Akif
@@ -294,5 +338,11 @@ class BasicBufferMgr {
 	   bufferStates += "\n";
 	   
 	   return bufferStates;
+   }
+   
+   //Akif
+   //Unpin durumundaki bufferlari secmek icin strateji secimi yapilir.
+   public void setReplacementPolicy(SimpleDB.bufferReplacementPolicy pPolicy) {
+	   replacementPolicy = pPolicy;
    }
 }

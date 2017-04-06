@@ -215,4 +215,12 @@ public class Buffer {
    public int getPins() {
 	   return pins;
    }
+   
+   //Akif
+   public int getBlockNum() {
+	   if(blk != null)
+		   return blk.number();
+	   else
+		   return -1; //Buffer dolu degilse.
+   }
 }

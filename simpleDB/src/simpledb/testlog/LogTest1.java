@@ -1,4 +1,4 @@
-package simpledb.test;
+package simpledb.testlog;
 
 import static org.junit.Assert.*;
 
@@ -34,3 +34,4 @@ public class LogTest1 {
 	}
 
 }
+
