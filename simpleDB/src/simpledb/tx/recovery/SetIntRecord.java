@@ -4,6 +4,7 @@ import simpledb.server.SimpleDB;
 import simpledb.buffer.*;
 import simpledb.file.Block;
 import simpledb.log.BasicLogRecord;
+import simpledb.log.LSN;
 
 class SetIntRecord implements LogRecord {
    private int txnum, offset, val;
@@ -44,10 +45,17 @@ class SetIntRecord implements LogRecord {
     * integer value at that offset.
     * @return the LSN of the last log value
     */
-   public int writeToLog() {
-      Object[] rec = new Object[] {SETINT, txnum, blk.fileName(),
-         blk.number(), offset, val};
-      return logMgr.append(rec);
+//   public int writeToLog() {
+//      Object[] rec = new Object[] {SETINT, txnum, blk.fileName(),
+//         blk.number(), offset, val};
+//      return logMgr.append(rec);
+//   }
+ 
+   //Akif
+   public LSN writeToLog() {
+	   Object[] rec = new Object[] {SETINT, txnum, blk.fileName(),
+			   blk.number(), offset, val};
+	   return logMgr.append(rec);
    }
 
    public int op() {
@@ -69,10 +77,18 @@ class SetIntRecord implements LogRecord {
     * (using a dummy LSN), and unpins the buffer.
     * @see simpledb.tx.recovery.LogRecord#undo(int)
     */
+//   public void undo(int txnum) {
+//      BufferMgr buffMgr = SimpleDB.bufferMgr();
+//      Buffer buff = buffMgr.pin(blk);
+//      buff.setInt(offset, val, txnum, -1);
+//      buffMgr.unpin(buff);
+//   }
+   
+   //Akif
    public void undo(int txnum) {
-      BufferMgr buffMgr = SimpleDB.bufferMgr();
-      Buffer buff = buffMgr.pin(blk);
-      buff.setInt(offset, val, txnum, -1);
-      buffMgr.unpin(buff);
+	   BufferMgr buffMgr = SimpleDB.bufferMgr();
+	   Buffer buff = buffMgr.pin(blk);
+	   buff.setInt(offset, val, txnum, LSN.DUMMY);
+	   buffMgr.unpin(buff);
    }
 }

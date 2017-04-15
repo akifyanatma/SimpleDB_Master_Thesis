@@ -2,6 +2,7 @@ package simpledb.tx.recovery;
 
 import static simpledb.tx.recovery.LogRecord.*;
 import simpledb.file.Block;
+import simpledb.log.LSN;
 import simpledb.buffer.Buffer;
 import simpledb.server.SimpleDB;
 import java.util.*;
@@ -25,32 +26,55 @@ public class RecoveryMgr {
    /**
     * Writes a commit record to the log, and flushes it to disk.
     */
+//   public void commit() {
+//      SimpleDB.bufferMgr().flushAll(txnum);
+//      int lsn = new CommitRecord(txnum).writeToLog();
+//      SimpleDB.logMgr().flush(lsn);
+//   }
+   
+   //Akif
    public void commit() {
-      SimpleDB.bufferMgr().flushAll(txnum);
-      int lsn = new CommitRecord(txnum).writeToLog();
-      SimpleDB.logMgr().flush(lsn);
+	   SimpleDB.bufferMgr().flushAll(txnum);
+	   LSN lsn = new CommitRecord(txnum).writeToLog();
+	   SimpleDB.logMgr().flush(lsn);
    }
 
    /**
     * Writes a rollback record to the log, and flushes it to disk.
     */
+//   public void rollback() {
+//      doRollback();
+//      SimpleDB.bufferMgr().flushAll(txnum);
+//      int lsn = new RollbackRecord(txnum).writeToLog();
+//      SimpleDB.logMgr().flush(lsn);
+//   }
+   
+   //Akif
    public void rollback() {
-      doRollback();
-      SimpleDB.bufferMgr().flushAll(txnum);
-      int lsn = new RollbackRecord(txnum).writeToLog();
-      SimpleDB.logMgr().flush(lsn);
+	   doRollback();
+	   SimpleDB.bufferMgr().flushAll(txnum);
+	   LSN lsn = new RollbackRecord(txnum).writeToLog();
+	   SimpleDB.logMgr().flush(lsn);
    }
 
    /**
     * Recovers uncompleted transactions from the log,
     * then writes a quiescent checkpoint record to the log and flushes it.
     */
+//   public void recover() {
+//      doRecover();
+//      SimpleDB.bufferMgr().flushAll(txnum);
+//      int lsn = new CheckpointRecord().writeToLog();
+//      SimpleDB.logMgr().flush(lsn);
+//
+//   }
+   
+   //Akif
    public void recover() {
-      doRecover();
-      SimpleDB.bufferMgr().flushAll(txnum);
-      int lsn = new CheckpointRecord().writeToLog();
-      SimpleDB.logMgr().flush(lsn);
-
+	   doRecover();
+	   SimpleDB.bufferMgr().flushAll(txnum);
+	   LSN lsn = new CheckpointRecord().writeToLog();
+	   SimpleDB.logMgr().flush(lsn);
    }
 
    /**
@@ -61,13 +85,23 @@ public class RecoveryMgr {
     * @param offset the offset of the value in the page
     * @param newval the value to be written
     */
-   public int setInt(Buffer buff, int offset, int newval) {
-      int oldval = buff.getInt(offset);
-      Block blk = buff.block();
-      if (isTempBlock(blk))
-         return -1;
-      else
-         return new SetIntRecord(txnum, blk, offset, oldval).writeToLog();
+//   public int setInt(Buffer buff, int offset, int newval) {
+//      int oldval = buff.getInt(offset);
+//      Block blk = buff.block();
+//      if (isTempBlock(blk))
+//         return -1;
+//      else
+//         return new SetIntRecord(txnum, blk, offset, oldval).writeToLog();
+//   }
+   
+   //Akif
+   public LSN setInt(Buffer buff, int offset, int newval) {
+	   int oldval = buff.getInt(offset);
+	   Block blk = buff.block();
+	   if (isTempBlock(blk))
+		   return LSN.DUMMY;
+	   else
+		   return new SetIntRecord(txnum, blk, offset, oldval).writeToLog();
    }
 
    /**
@@ -78,13 +112,23 @@ public class RecoveryMgr {
     * @param offset the offset of the value in the page
     * @param newval the value to be written
     */
-   public int setString(Buffer buff, int offset, String newval) {
-      String oldval = buff.getString(offset);
-      Block blk = buff.block();
-      if (isTempBlock(blk))
-         return -1;
-      else
-         return new SetStringRecord(txnum, blk, offset, oldval).writeToLog();
+//   public int setString(Buffer buff, int offset, String newval) {
+//      String oldval = buff.getString(offset);
+//      Block blk = buff.block();
+//      if (isTempBlock(blk))
+//         return -1;
+//      else
+//         return new SetStringRecord(txnum, blk, offset, oldval).writeToLog();
+//   }
+   
+   //Akif
+   public LSN setString(Buffer buff, int offset, String newval) {
+	   String oldval = buff.getString(offset);
+	   Block blk = buff.block();
+	   if (isTempBlock(blk))
+		   return LSN.DUMMY;
+	   else
+		   return new SetStringRecord(txnum, blk, offset, oldval).writeToLog();
    }
 
    /**

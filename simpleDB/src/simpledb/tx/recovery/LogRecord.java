@@ -1,5 +1,6 @@
 package simpledb.tx.recovery;
 
+import simpledb.log.LSN;
 import simpledb.log.LogMgr;
 import simpledb.server.SimpleDB;
 
@@ -21,7 +22,10 @@ public interface LogRecord {
     * Writes the record to the log and returns its LSN.
     * @return the LSN of the record in the log
     */
-   int writeToLog();
+   //int writeToLog();
+   
+   //Akif
+   LSN writeToLog();
    
    /**
     * Returns the log record's type. 

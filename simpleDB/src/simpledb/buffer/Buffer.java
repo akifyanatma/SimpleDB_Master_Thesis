@@ -2,6 +2,7 @@ package simpledb.buffer;
 
 import simpledb.server.SimpleDB;
 import simpledb.file.*;
+import simpledb.log.LSN;
 
 /**
  * An individual buffer.
@@ -18,7 +19,9 @@ public class Buffer {
    private Block blk = null;
    private int pins = 0;
    private int modifiedBy = -1;  // negative means not modified
-   private int logSequenceNumber = -1; // negative means no corresponding log record
+   //private int logSequenceNumber = -1; // negative means no corresponding log record
+   
+   private LSN logSequenceNumber = new LSN(-1,-1);//Akif
 
    /**
     * Creates a new buffer, wrapping a new 
@@ -74,11 +77,21 @@ public class Buffer {
     * @param txnum the id of the transaction performing the modification
     * @param lsn the LSN of the corresponding log record
     */
-   public void setInt(int offset, int val, int txnum, int lsn) {
-      modifiedBy = txnum;
-      if (lsn >= 0)
-	      logSequenceNumber = lsn;
-      contents.setInt(offset, val);
+//   public void setInt(int offset, int val, int txnum, int lsn) {
+//      modifiedBy = txnum;
+//      if (lsn >= 0)
+//	      logSequenceNumber = lsn;
+//      contents.setInt(offset, val);
+//   }
+   
+   //Akif
+   public void setInt(int offset, int val, int txnum, LSN lsn) {
+	   modifiedBy = txnum;
+	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0) {
+		   logSequenceNumber.setBlkNum(lsn.getBlkNum());
+		   logSequenceNumber.setOffset(lsn.getOffset());
+	   }		   
+	   contents.setInt(offset, val);
    }
 
    /**
@@ -95,11 +108,21 @@ public class Buffer {
     * @param txnum the id of the transaction performing the modification
     * @param lsn the LSN of the corresponding log record
     */
-   public void setString(int offset, String val, int txnum, int lsn) {
-      modifiedBy = txnum;
-      if (lsn >= 0)
-	      logSequenceNumber = lsn;
-      contents.setString(offset, val);
+//   public void setString(int offset, String val, int txnum, int lsn) {
+//      modifiedBy = txnum;
+//      if (lsn >= 0)
+//	      logSequenceNumber = lsn;
+//      contents.setString(offset, val);
+//   }
+   
+   //Akif
+   public void setString(int offset, String val, int txnum, LSN lsn) {
+	   modifiedBy = txnum;
+	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0) {
+		   logSequenceNumber.setBlkNum(lsn.getBlkNum());
+		   logSequenceNumber.setOffset(lsn.getOffset());
+	   }
+	   contents.setString(offset, val);
    }
 
    /**

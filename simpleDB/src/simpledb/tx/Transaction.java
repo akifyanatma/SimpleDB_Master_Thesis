@@ -2,6 +2,7 @@ package simpledb.tx;
 
 import simpledb.server.SimpleDB;
 import simpledb.file.Block;
+import simpledb.log.LSN;
 import simpledb.buffer.*;
 import simpledb.tx.recovery.RecoveryMgr;
 import simpledb.tx.concurrency.ConcurrencyMgr;
@@ -140,11 +141,19 @@ public class Transaction {
     * @param offset a byte offset within that block
     * @param val the value to be stored
     */
+//   public void setInt(Block blk, int offset, int val) {
+//      concurMgr.xLock(blk);
+//      Buffer buff = myBuffers.getBuffer(blk);
+//      int lsn = recoveryMgr.setInt(buff, offset, val);
+//      buff.setInt(offset, val, txnum, lsn);
+//   }
+   
+   //Akif
    public void setInt(Block blk, int offset, int val) {
-      concurMgr.xLock(blk);
-      Buffer buff = myBuffers.getBuffer(blk);
-      int lsn = recoveryMgr.setInt(buff, offset, val);
-      buff.setInt(offset, val, txnum, lsn);
+	   concurMgr.xLock(blk);
+	   Buffer buff = myBuffers.getBuffer(blk);
+	   LSN lsn = recoveryMgr.setInt(buff, offset, val);
+	   buff.setInt(offset, val, txnum, lsn);
    }
    
    /**
@@ -160,11 +169,19 @@ public class Transaction {
     * @param offset a byte offset within that block
     * @param val the value to be stored
     */
+//   public void setString(Block blk, int offset, String val) {
+//      concurMgr.xLock(blk);
+//      Buffer buff = myBuffers.getBuffer(blk);
+//      int lsn = recoveryMgr.setString(buff, offset, val);
+//      buff.setString(offset, val, txnum, lsn);
+//   }
+   
+   //Akif
    public void setString(Block blk, int offset, String val) {
-      concurMgr.xLock(blk);
-      Buffer buff = myBuffers.getBuffer(blk);
-      int lsn = recoveryMgr.setString(buff, offset, val);
-      buff.setString(offset, val, txnum, lsn);
+	   concurMgr.xLock(blk);
+	   Buffer buff = myBuffers.getBuffer(blk);
+	   LSN lsn = recoveryMgr.setString(buff, offset, val);
+	   buff.setString(offset, val, txnum, lsn);
    }
    
    /**

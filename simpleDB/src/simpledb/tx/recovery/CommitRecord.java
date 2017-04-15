@@ -1,6 +1,7 @@
 package simpledb.tx.recovery;
 
 import simpledb.log.BasicLogRecord;
+import simpledb.log.LSN;
 
 /**
  * The COMMIT log record
@@ -31,9 +32,15 @@ class CommitRecord implements LogRecord {
     * followed by the transaction id.
     * @return the LSN of the last log value
     */
-   public int writeToLog() {
-      Object[] rec = new Object[] {COMMIT, txnum};
-      return logMgr.append(rec);
+//   public int writeToLog() {
+//      Object[] rec = new Object[] {COMMIT, txnum};
+//      return logMgr.append(rec);
+//   }
+   
+   //Akif
+   public LSN writeToLog() {
+	   Object[] rec = new Object[] {COMMIT, txnum};
+	   return logMgr.append(rec);
    }
    
    public int op() {

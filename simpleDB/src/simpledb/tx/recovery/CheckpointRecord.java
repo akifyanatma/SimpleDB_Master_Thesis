@@ -1,6 +1,7 @@
 package simpledb.tx.recovery;
 
 import simpledb.log.BasicLogRecord;
+import simpledb.log.LSN;
 
 /**
  * The CHECKPOINT log record.
@@ -26,9 +27,15 @@ class CheckpointRecord implements LogRecord {
     * and nothing else.
     * @return the LSN of the last log value
     */
-   public int writeToLog() {
-      Object[] rec = new Object[] {CHECKPOINT};
-      return logMgr.append(rec);
+//   public int writeToLog() {
+//      Object[] rec = new Object[] {CHECKPOINT};
+//      return logMgr.append(rec);
+//   }
+   
+   //Akif
+   public LSN writeToLog() {
+	   Object[] rec = new Object[] {CHECKPOINT};
+	   return logMgr.append(rec);
    }
    
    public int op() {

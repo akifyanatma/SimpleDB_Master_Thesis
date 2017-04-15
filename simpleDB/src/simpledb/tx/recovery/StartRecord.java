@@ -1,6 +1,7 @@
 package simpledb.tx.recovery;
 
 import simpledb.log.BasicLogRecord;
+import simpledb.log.LSN;
 
 class StartRecord implements LogRecord {
    private int txnum;
@@ -27,9 +28,15 @@ class StartRecord implements LogRecord {
     * followed by the transaction id.
     * @return the LSN of the last log value
     */
-   public int writeToLog() {
-      Object[] rec = new Object[] {START, txnum};
-      return logMgr.append(rec);
+//   public int writeToLog() {
+//      Object[] rec = new Object[] {START, txnum};
+//      return logMgr.append(rec);
+//   }
+   
+   //Akif
+   public LSN writeToLog() {
+	   Object[] rec = new Object[] {START, txnum};
+	   return logMgr.append(rec);
    }
    
    public int op() {

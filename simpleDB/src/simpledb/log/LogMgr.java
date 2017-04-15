@@ -27,9 +27,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private Block currentblk;
    private int currentpos;
    
-   private int mostRecentFlushedLSN;//Akif
-   private int mostRecentFlushedPos;//Akif
-
+   private LSN mostRecentLSN = new LSN(-1,-1); //Akif
+   private LSN currentLSN = new LSN(-1,-1); //Akif
+   
    /**
     * Creates the manager for the specified log file.
     * If the log file does not yet exist, it is created
@@ -43,33 +43,33 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * is called first.
     * @param logfile the name of the log file
     */
-//   public LogMgr(String logfile) {
-//      this.logfile = logfile;
-//      int logsize = SimpleDB.fileMgr().size(logfile);
-//      if (logsize == 0)
-//         appendNewBlock();
-//      else {
-//         currentblk = new Block(logfile, logsize-1);
-//         mypage.read(currentblk);
-//         currentpos = getLastRecordPosition() + INT_SIZE;
-//      }
-//   }
+   public LogMgr(String logfile) {
+      this.logfile = logfile;
+      int logsize = SimpleDB.fileMgr().size(logfile);
+      if (logsize == 0)
+         appendNewBlock();
+      else {
+         currentblk = new Block(logfile, logsize-1);
+         mypage.read(currentblk);
+         currentpos = getLastRecordPosition() + INT_SIZE;
+      }
+   }
    
    //Akif
-   public LogMgr(String logfile) {
-	   this.logfile = logfile;
-	   int logsize = SimpleDB.fileMgr().size(logfile);
-	   if (logsize == 0)
-		   appendNewBlock();
-	   else {
-		   currentblk = new Block(logfile, logsize-1);
-	       mypage.read(currentblk);
-	       currentpos = getLastRecordPosition() + INT_SIZE;
-	   }
-	   
-	   mostRecentFlushedLSN = -1;
-	   mostRecentFlushedPos = -1;
-   }
+//   public LogMgr(String logfile) {
+//	   this.logfile = logfile;
+//	   int logsize = SimpleDB.fileMgr().size(logfile);
+//	   if (logsize == 0)
+//		   appendNewBlock();
+//	   else {
+//		   currentblk = new Block(logfile, logsize-1);
+//	       mypage.read(currentblk);
+//	       currentpos = getLastRecordPosition() + INT_SIZE;
+//	   }
+//	   
+//	   mostRecentFlushedLSN = -1;
+//	   mostRecentFlushedPos = -1;
+//   }
 
    /**
     * Ensures that the log records corresponding to the
@@ -83,10 +83,16 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 //   }
    
    //Akif
-   public void flush(int lsn) {
-	   if (lsn >= currentLSN() && !(mostRecentFlushedLSN == currentLSN() && mostRecentFlushedPos == currentpos))
+   public void flush(LSN lsn) {
+	   if (lsn.compareTo(mostRecentLSN) > 0)
 		   flush();
    }
+   
+   //Akif
+//   public void flush(int lsn) {
+//	   if (lsn >= currentLSN() && !(mostRecentFlushedLSN == currentLSN() && mostRecentFlushedPos == currentpos))
+//		   flush();
+//   }
 
    /**
     * Returns an iterator for the log records,
@@ -107,18 +113,33 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * @param rec the list of values
     * @return the LSN of the final value
     */
-   public synchronized int append(Object[] rec) {
-      int recsize = INT_SIZE;  // 4 bytes for the integer that points to the previous log record
-      for (Object obj : rec)
-         recsize += size(obj);
-      if (currentpos + recsize >= BLOCK_SIZE){ // the log record doesn't fit,
-         flush();        // so move to the next block.
-         appendNewBlock();
-      }
-      for (Object obj : rec)
-         appendVal(obj);
-      finalizeRecord();
-      return currentLSN();
+//   public synchronized int append(Object[] rec) {
+//      int recsize = INT_SIZE;  // 4 bytes for the integer that points to the previous log record
+//      for (Object obj : rec)
+//         recsize += size(obj);
+//      if (currentpos + recsize >= BLOCK_SIZE){ // the log record doesn't fit,
+//         flush();        // so move to the next block.
+//         appendNewBlock();
+//      }
+//      for (Object obj : rec)
+//         appendVal(obj);
+//      finalizeRecord();
+//      return currentLSN();
+//   }
+   
+   //Akif
+   public synchronized LSN append(Object[] rec) {
+	   int recsize = INT_SIZE;  // 4 bytes for the integer that points to the previous log record
+	   for (Object obj : rec)
+		   recsize += size(obj);
+	   if (currentpos + recsize >= BLOCK_SIZE){ // the log record doesn't fit,
+		   flush();        // so move to the next block.
+	       appendNewBlock();
+	   }
+	   for (Object obj : rec)
+	       appendVal(obj);
+	   finalizeRecord();
+	   return currentLSN();
    }
 
    /**
@@ -154,8 +175,15 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * Thus every log record in a block has the same LSN.
     * @return the LSN of the most recent log record
     */
-   private int currentLSN() {
-      return currentblk.number();
+//   private int currentLSN() {
+//      return currentblk.number();
+//   }
+   
+   //Akif
+   private LSN currentLSN() {
+	   currentLSN.setBlkNum(currentblk.number());
+	   currentLSN.setOffset(currentpos);	   
+	   return currentLSN();
    }
 
    /**
@@ -165,12 +193,18 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 //      mypage.write(currentblk);
 //   }
    
-   //Akif
    private void flush() {
 	   mypage.write(currentblk);
-	   mostRecentFlushedLSN = currentLSN();
-	   mostRecentFlushedPos = currentpos;
+	   mostRecentLSN.setBlkNum(currentblk.number());
+	   mostRecentLSN.setOffset(currentpos);
    }
+   
+   //Akif
+//   private void flush() {
+//	   mypage.write(currentblk);
+//	   mostRecentFlushedLSN = currentLSN();
+//	   mostRecentFlushedPos = currentpos;
+//   }
 
    /**
     * Clear the current page, and append it to the log file.
@@ -186,9 +220,18 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	   setLastRecordPosition(0);
 	   currentpos = INT_SIZE;
 	   currentblk = mypage.append(logfile);
-	   mostRecentFlushedLSN = currentLSN();
-	   mostRecentFlushedPos = 0;
+	   mostRecentLSN.setBlkNum(currentblk.number());
+	   mostRecentLSN.setOffset(0);
    }
+   
+   //Akif
+//   private void appendNewBlock() {
+//	   setLastRecordPosition(0);
+//	   currentpos = INT_SIZE;
+//	   currentblk = mypage.append(logfile);
+//	   mostRecentFlushedLSN = currentLSN();
+//	   mostRecentFlushedPos = 0;
+//   }
 
    /**
     * Sets up a circular chain of pointers to the records in the page.
