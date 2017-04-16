@@ -13,12 +13,11 @@ public class LSN implements Comparable<LSN> {
 	}
 		
 	@Override
-	public int compareTo(LSN lsnObj) {
-		
-		if(this.blknum > lsnObj.getBlkNum() && this.offset > lsnObj.getOffset())
+	public int compareTo(LSN lsnObj) {		
+		if(this.blknum >= lsnObj.getBlkNum() && this.offset >= lsnObj.getOffset())
 			return 1;
 		
-		return 0;
+		return -1;
 	}
 	
 	public void setBlkNum(int blknum) {
@@ -35,6 +34,11 @@ public class LSN implements Comparable<LSN> {
 	
 	public int getOffset() {
 		return offset;
+	}
+	
+	public void copyFrom (LSN lsnObj) {
+		this.blknum = lsnObj.blknum;
+		this.offset = lsnObj.offset;
 	}
 
 }

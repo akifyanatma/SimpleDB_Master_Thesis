@@ -7,6 +7,7 @@ import org.junit.Test;
 import simpledb.buffer.Buffer;
 import simpledb.buffer.BufferMgr;
 import simpledb.file.Block;
+import simpledb.log.LSN;
 import simpledb.log.LogMgr;
 import simpledb.server.SimpleDB;
 
@@ -32,33 +33,39 @@ public class LogTest_2_1 {
 		Block blk0 = new Block("student.tbl", 0);
 		Buffer buff0 = bm.pin(blk0);
 		Object[] logrec0 = new Object[]{mytxnum, "student.tbl", 0, 0, "a"};
-		int lsn0 = lm.append(logrec0);
+		LSN lsn0 = new LSN(-1,-1);
+		lsn0.copyFrom(lm.append(logrec0));
+		//lsn0 = lm.append(logrec0);
 		buff0.setString(0, "a", mytxnum, lsn0);
 		
 		Block blk1 = new Block("student.tbl", 1);
 		Buffer buff1 = bm.pin(blk1);
 		Object[] logrec1 = new Object[]{mytxnum, "student.tbl", 1, 0, "b"};
-		int lsn1 = lm.append(logrec1);
+		LSN lsn1 = new LSN(-1,-1);
+		lsn1.copyFrom(lm.append(logrec1));
+		//lsn1 = lm.append(logrec1);
 		buff1.setString(0, "b", mytxnum, lsn1);
 		
 		Block blk2 = new Block("student.tbl", 2);
 		Buffer buff2 = bm.pin(blk2);
 		Object[] logrec2 = new Object[]{mytxnum, "student.tbl", 2, 0, "c"};
-		int lsn2 = lm.append(logrec2);
+		LSN lsn2 = new LSN(-1,-1);
+		lsn2.copyFrom(lm.append(logrec2));
+		//LSN lsn2 = lm.append(logrec2);
 		buff2.setString(0, "c", mytxnum, lsn2);
 		
 		Block blk3 = new Block("student.tbl", 3);
 		Buffer buff3 = bm.pin(blk3);
 		Object[] logrec3 = new Object[]{mytxnum, "student.tbl", 3, 0, "d"};
-		int lsn3 = lm.append(logrec3);
+		LSN lsn3 = new LSN(-1,-1);
+		lsn3.copyFrom(lm.append(logrec3));
+		//LSN lsn3 = lm.append(logrec3);
 		buff3.setString(0, "b", mytxnum, lsn3);
-		
-		
-		
-		bm.unpin(buff0);
-		bm.unpin(buff1);
-		bm.unpin(buff2);
+			
 		bm.unpin(buff3);
+		bm.unpin(buff2);
+		bm.unpin(buff1);
+		bm.unpin(buff0);
 		
 		Block blk4 = new Block("student.tbl", 4);
 		Block blk5 = new Block("student.tbl", 5);

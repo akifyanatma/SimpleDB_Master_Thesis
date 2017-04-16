@@ -27,8 +27,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private Block currentblk;
    private int currentpos;
    
-   private LSN mostRecentLSN = new LSN(-1,-1); //Akif
-   private LSN currentLSN = new LSN(-1,-1); //Akif
+   private LSN mostRecentLSN = new LSN(-1,-1); //Akif, en son flush edilen log blogu numarasi ve offset bilgileri
+   private LSN currentLSN = new LSN(-1,-1); //Akif, en son eklenen kayit icin log blogu numarasi ve offset bilgileri
    
    /**
     * Creates the manager for the specified log file.
@@ -55,22 +55,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
       }
    }
    
-   //Akif
-//   public LogMgr(String logfile) {
-//	   this.logfile = logfile;
-//	   int logsize = SimpleDB.fileMgr().size(logfile);
-//	   if (logsize == 0)
-//		   appendNewBlock();
-//	   else {
-//		   currentblk = new Block(logfile, logsize-1);
-//	       mypage.read(currentblk);
-//	       currentpos = getLastRecordPosition() + INT_SIZE;
-//	   }
-//	   
-//	   mostRecentFlushedLSN = -1;
-//	   mostRecentFlushedPos = -1;
-//   }
-
    /**
     * Ensures that the log records corresponding to the
     * specified LSN has been written to disk.
@@ -84,16 +68,10 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    public void flush(LSN lsn) {
-	   if (lsn.compareTo(mostRecentLSN) > 0)
+	   if (mostRecentLSN.compareTo(lsn) < 0)
 		   flush();
    }
    
-   //Akif
-//   public void flush(int lsn) {
-//	   if (lsn >= currentLSN() && !(mostRecentFlushedLSN == currentLSN() && mostRecentFlushedPos == currentpos))
-//		   flush();
-//   }
-
    /**
     * Returns an iterator for the log records,
     * which will be returned in reverse order starting with the most recent.
@@ -139,7 +117,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	   for (Object obj : rec)
 	       appendVal(obj);
 	   finalizeRecord();
-	   return currentLSN();
+	   currentLSN.setBlkNum(currentblk.number());
+	   currentLSN.setOffset(currentpos);
+	   return currentLSN;
    }
 
    /**
@@ -181,9 +161,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    private LSN currentLSN() {
-	   currentLSN.setBlkNum(currentblk.number());
-	   currentLSN.setOffset(currentpos);	   
-	   return currentLSN();
+	   return currentLSN;
    }
 
    /**
@@ -199,13 +177,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	   mostRecentLSN.setOffset(currentpos);
    }
    
-   //Akif
-//   private void flush() {
-//	   mypage.write(currentblk);
-//	   mostRecentFlushedLSN = currentLSN();
-//	   mostRecentFlushedPos = currentpos;
-//   }
-
    /**
     * Clear the current page, and append it to the log file.
     */
@@ -224,15 +195,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	   mostRecentLSN.setOffset(0);
    }
    
-   //Akif
-//   private void appendNewBlock() {
-//	   setLastRecordPosition(0);
-//	   currentpos = INT_SIZE;
-//	   currentblk = mypage.append(logfile);
-//	   mostRecentFlushedLSN = currentLSN();
-//	   mostRecentFlushedPos = 0;
-//   }
-
    /**
     * Sets up a circular chain of pointers to the records in the page.
     * There is an integer added to the end of each log record
