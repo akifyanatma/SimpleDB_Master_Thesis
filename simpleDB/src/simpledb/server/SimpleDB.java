@@ -24,7 +24,7 @@ import simpledb.index.planner.IndexUpdatePlanner;
  */
 public class SimpleDB {
    //public static int BUFFER_SIZE = 128;
-   public static int BUFFER_SIZE = 5; //Akif 
+   public static int BUFFER_SIZE = 8; //Akif 
    public static String LOG_FILE = "simpledb.log";
    
    //Akif
@@ -89,9 +89,17 @@ public class SimpleDB {
     * Initializes the file, log, and buffer managers.
     * @param dirname the name of the database directory
     */
+//   public static void initFileLogAndBufferMgr(String dirname) {
+//      initFileAndLogMgr(dirname);
+//      bm = new BufferMgr(BUFFER_SIZE);
+//   }
+   
+   //Akif
    public static void initFileLogAndBufferMgr(String dirname) {
-      initFileAndLogMgr(dirname);
-      bm = new BufferMgr(BUFFER_SIZE);
+	   initFileAndLogMgr(dirname);
+	   bm = new BufferMgr(BUFFER_SIZE);
+	      
+	   logm.takeFirstBuffer(); //Akif  
    }
    
    /**
