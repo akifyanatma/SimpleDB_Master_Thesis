@@ -23,8 +23,22 @@ import simpledb.index.planner.IndexUpdatePlanner;
  * @author Edward Sciore
  */
 public class SimpleDB {
-   public static int BUFFER_SIZE = 8;
+   //public static int BUFFER_SIZE = 128;
+   public static int BUFFER_SIZE = 5; //Akif 
    public static String LOG_FILE = "simpledb.log";
+   
+   //Akif
+   public enum bufferTypes {
+	   LOG_BUFF_TYPE,
+	   OTHER_BUFF_TYPE
+   }
+   
+   //Akif
+   public enum bufferReplacementPolicy {
+	   NAIVE,
+	   LRU,
+	   MRU
+   }
    
    private static FileMgr     fm;
    private static BufferMgr   bm;

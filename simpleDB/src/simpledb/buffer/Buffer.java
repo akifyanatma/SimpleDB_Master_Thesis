@@ -15,12 +15,13 @@ import simpledb.log.LSN;
  * @author Edward Sciore
  */
 public class Buffer {
+   private int id; //Akif
+   private SimpleDB.bufferTypes type; //Akif
    private Page contents = new Page();
    private Block blk = null;
    private int pins = 0;
    private int modifiedBy = -1;  // negative means not modified
    //private int logSequenceNumber = -1; // negative means no corresponding log record
-   
    private LSN logSequenceNumber = new LSN(-1,-1);//Akif
 
    /**
@@ -37,7 +38,13 @@ public class Buffer {
     * {@link simpledb.server.SimpleDB#initFileAndLogMgr(String)} or
     * is called first.
     */
-   public Buffer() {}
+//   public Buffer() {}
+   
+   //Akif
+   public Buffer(int pId, SimpleDB.bufferTypes pType) {
+	   id = pId;
+	   type = pType;
+   }
    
    /**
     * Returns the integer value at the specified offset of the
@@ -87,10 +94,8 @@ public class Buffer {
    //Akif
    public void setInt(int offset, int val, int txnum, LSN lsn) {
 	   modifiedBy = txnum;
-	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0) {
-		   logSequenceNumber.setBlkNum(lsn.getBlkNum());
-		   logSequenceNumber.setOffset(lsn.getOffset());
-	   }		   
+	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0)
+		   logSequenceNumber.copyFrom(lsn);
 	   contents.setInt(offset, val);
    }
 
@@ -118,10 +123,8 @@ public class Buffer {
    //Akif
    public void setString(int offset, String val, int txnum, LSN lsn) {
 	   modifiedBy = txnum;
-	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0) {
-		   logSequenceNumber.setBlkNum(lsn.getBlkNum());
-		   logSequenceNumber.setOffset(lsn.getOffset());
-	   }
+	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0)
+		   logSequenceNumber.copyFrom(lsn);
 	   contents.setString(offset, val);
    }
 
@@ -209,5 +212,33 @@ public class Buffer {
       fmtr.format(contents);
       blk = contents.append(filename);
       pins = 0;
+   }
+   
+   //Akif
+   public int getId() {
+	   return id;
+   }
+   
+   //Akif
+   public SimpleDB.bufferTypes getType() {
+	   return type;
+   }
+   
+   //Akif
+   public void writeContent() {
+	   contents.write(blk);
+   }
+   
+   //Akif
+   public int getPins() {
+	   return pins;
+   }
+   
+   //Akif
+   public int getBlockNum() {
+	   if(blk != null)
+		   return blk.number();
+	   else
+		   return -1; //Buffer dolu degilse.
    }
 }
