@@ -4,6 +4,7 @@ import simpledb.server.SimpleDB;
 import simpledb.buffer.Buffer;
 import simpledb.buffer.BufferMgr;
 import simpledb.buffer.PageFormatter;
+import simpledb.buffer.ZeroPageFormatter;
 import simpledb.file.*;
 import static simpledb.file.Page.*;
 import java.util.*;
@@ -204,16 +205,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 //      currentpos = INT_SIZE;
 //      currentblk = mypage.append(logfile);
 //   }
-   
-   //Akif
-//   private void appendNewBlock() {
-//	   setLastRecordPosition(0);
-//	   currentpos = INT_SIZE;
-//	   currentblk = mypage.append(logfile);
-//	   mostRecentLSN.setBlkNum(currentblk.number());
-//	   mostRecentLSN.setOffset(0);
-//   }
-   
+      
    //Akif
    private void appendNewBlock() {
 	  setLastRecordPosition(0);
@@ -221,8 +213,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	  if(mybuffer != null)
 		  bm.unpin(mybuffer);
 	  currentpos = INT_SIZE;
-	  //PageFormatter pf = new ZeroPageFormatter();  
-	 // mybuffer = bm.pinNew(logfile, pf, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
+	  PageFormatter pf = new ZeroPageFormatter();  
+	  mybuffer = bm.pinNew(logfile, pf, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
 	  currentblk = mybuffer.block();
 	  mostRecentLSN.setBlkNum(currentblk.number());
 	  mostRecentLSN.setOffset(0);
@@ -264,5 +256,17 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    //Akif
    private void setLastRecordPosition(int pos) {
 	   mybuffer.setInt(LAST_POS, pos, -1, LSN.DUMMY);
+   }
+   
+   //Akif
+   public void takeFirstBuffer() {
+     int logsize = SimpleDB.fileMgr().size(logfile);
+     if (logsize == 0)
+        appendNewBlock();
+     else {
+        currentblk = new Block(logfile, logsize-1);
+        mybuffer = SimpleDB.bufferMgr().pin(currentblk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
+        currentpos = getLastRecordPosition() + INT_SIZE;
+     }
    }
 }
