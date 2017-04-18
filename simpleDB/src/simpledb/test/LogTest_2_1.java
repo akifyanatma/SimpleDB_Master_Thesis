@@ -7,6 +7,7 @@ import org.junit.Test;
 import simpledb.buffer.Buffer;
 import simpledb.buffer.BufferMgr;
 import simpledb.file.Block;
+import simpledb.file.FileMgr;
 import simpledb.log.LSN;
 import simpledb.log.LogMgr;
 import simpledb.server.SimpleDB;
@@ -25,7 +26,10 @@ public class LogTest_2_1 {
 	public void test() {
 
 		SimpleDB.initFileLogAndBufferMgr("studentdb");
+		FileMgr fm = SimpleDB.fileMgr();
+		System.out.println("Written block count: "+ fm.getBlockWrittenCount());
 		BufferMgr bm = SimpleDB.bufferMgr();
+		bm.setReplacementPolicy(SimpleDB.bufferReplacementPolicy.MRU);
 		LogMgr lm = SimpleDB.logMgr();
 		int mytxnum = 1; //assume we are transaction 1
 		
@@ -76,6 +80,8 @@ public class LogTest_2_1 {
 		bm.pin(blk5);
 		bm.pin(blk6);
 		bm.pin(blk7);
+		
+		System.out.println("Written block count: "+ fm.getBlockWrittenCount());
 	}
 
 }

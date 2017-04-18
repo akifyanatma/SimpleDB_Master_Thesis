@@ -25,6 +25,8 @@ public class FileMgr {
    private File dbDirectory;
    private boolean isNew;
    private Map<String,FileChannel> openFiles = new HashMap<String,FileChannel>();
+   public static int readBlockCount = 0;//Akif
+   public static int writtenBlockCount = 0;//Akif
 
    /**
     * Creates a file manager for the specified database.
@@ -55,15 +57,28 @@ public class FileMgr {
     * @param blk a reference to a disk block
     * @param bb  the bytebuffer
     */
+//   synchronized void read(Block blk, ByteBuffer bb) {
+//      try {
+//         bb.clear();
+//         FileChannel fc = getFile(blk.fileName());
+//         fc.read(bb, blk.number() * BLOCK_SIZE);
+//      }
+//      catch (IOException e) {
+//         throw new RuntimeException("cannot read block " + blk);
+//      }
+//   }
+   
+   //Akif
    synchronized void read(Block blk, ByteBuffer bb) {
-      try {
-         bb.clear();
-         FileChannel fc = getFile(blk.fileName());
-         fc.read(bb, blk.number() * BLOCK_SIZE);
-      }
-      catch (IOException e) {
-         throw new RuntimeException("cannot read block " + blk);
-      }
+	   try {
+		   bb.clear();
+	       FileChannel fc = getFile(blk.fileName());
+	       fc.read(bb, blk.number() * BLOCK_SIZE);
+	       readBlockCount++;
+	   }
+	   catch (IOException e) {
+		   throw new RuntimeException("cannot read block " + blk);
+	   }
    }
 
    /**
@@ -71,15 +86,27 @@ public class FileMgr {
     * @param blk a reference to a disk block
     * @param bb  the bytebuffer
     */
+//   synchronized void write(Block blk, ByteBuffer bb) {
+//      try {
+//         bb.rewind();
+//         FileChannel fc = getFile(blk.fileName());
+//         fc.write(bb, blk.number() * BLOCK_SIZE);
+//      }
+//      catch (IOException e) {
+//         throw new RuntimeException("cannot write block" + blk);
+//      }
+//   }
+   
    synchronized void write(Block blk, ByteBuffer bb) {
-      try {
-         bb.rewind();
-         FileChannel fc = getFile(blk.fileName());
-         fc.write(bb, blk.number() * BLOCK_SIZE);
-      }
-      catch (IOException e) {
-         throw new RuntimeException("cannot write block" + blk);
-      }
+	   try {
+		   bb.rewind();
+	       FileChannel fc = getFile(blk.fileName());
+	       fc.write(bb, blk.number() * BLOCK_SIZE);
+	       writtenBlockCount++;
+	   }
+	   catch (IOException e) {
+		   throw new RuntimeException("cannot write block" + blk);
+	   }
    }
 
    /**
@@ -138,5 +165,15 @@ public class FileMgr {
          openFiles.put(filename, fc);
       }
       return fc;
+   }
+   
+   //Akif
+   public int getBlockReadCount() {
+	   return readBlockCount;
+   }
+   
+   //Akif
+   public int getBlockWrittenCount() {
+	   return writtenBlockCount;
    }
 }
