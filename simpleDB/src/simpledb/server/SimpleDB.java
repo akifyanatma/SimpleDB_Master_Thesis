@@ -40,6 +40,10 @@ public class SimpleDB {
 	   MRU
    }
    
+   //Akif
+   //As default NAIVE policy is used.
+   public static bufferReplacementPolicy BUFFER_REPLACEMENT_POLICY = bufferReplacementPolicy.NAIVE;
+   
    private static FileMgr     fm;
    private static BufferMgr   bm;
    private static LogMgr      logm;

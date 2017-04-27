@@ -45,14 +45,13 @@ class BasicBufferMgr {
    
    //Akif
    BasicBufferMgr(int numbuffs) {
-	   replacementPolicy = SimpleDB.bufferReplacementPolicy.LRU;
 	   bufferpool = new Buffer[numbuffs];
 	   loadedBuffMap = new HashMap<Block, Buffer>();
 	   unpinnedLogBuffList = new ArrayList<Buffer>();
 	   unpinnedOtherBuffList = new ArrayList<Buffer>();
 	   int numLogBuffs = (int) (numbuffs*0.1);
-	   if(numLogBuffs<2)
-		   numLogBuffs = 3;
+	   if(numLogBuffs<1)
+		   numLogBuffs = 2;
 	   
 	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
 	      
@@ -240,7 +239,7 @@ class BasicBufferMgr {
    //Akif
    private Buffer chooseUnpinnedBuffer(SimpleDB.bufferTypes pBuffType) {	   
 	   
-	   if(replacementPolicy == SimpleDB.bufferReplacementPolicy.LRU) {
+	   if(SimpleDB.BUFFER_REPLACEMENT_POLICY == SimpleDB.bufferReplacementPolicy.LRU) {
 		   //Aranan listedeki ilk buffer kullanilacak
 		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   if(unpinnedLogBuffList.size() != 0)
@@ -255,7 +254,7 @@ class BasicBufferMgr {
 				   return null;
 		   }
 	   }
-	   else if(replacementPolicy == SimpleDB.bufferReplacementPolicy.MRU) {
+	   else if(SimpleDB.BUFFER_REPLACEMENT_POLICY == SimpleDB.bufferReplacementPolicy.MRU) {
 		   //Aranan listedeki son buffer kullanilacak
 		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   if(unpinnedLogBuffList.size() != 0)
@@ -338,11 +337,5 @@ class BasicBufferMgr {
 	   bufferStates += "\n";
 	   
 	   return bufferStates;
-   }
-   
-   //Akif
-   //Unpin durumundaki bufferlari secmek icin strateji secimi yapilir.
-   public void setReplacementPolicy(SimpleDB.bufferReplacementPolicy pPolicy) {
-	   replacementPolicy = pPolicy;
    }
 }

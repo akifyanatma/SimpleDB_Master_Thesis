@@ -40,5 +40,14 @@ public class LSN implements Comparable<LSN> {
 		this.blknum = lsnObj.blknum;
 		this.offset = lsnObj.offset;
 	}
+	
+	public String toString() {
+		String result = "<";
+		result += String.valueOf(blknum);
+		result += ", ";
+		result += String.valueOf(offset);
+		result += ">";
+		return result;
+	}
 
 }

@@ -192,6 +192,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    private void flush() {
+	   System.out.println("--------------> flushing log page " + currentblk.number() + "\n");
 	   SimpleDB.bufferMgr().writeBuffContent(mybuffer);
 	   mostRecentLSN.setBlkNum(currentblk.number());
 	   mostRecentLSN.setOffset(currentpos);
@@ -208,7 +209,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
       
    //Akif
    private void appendNewBlock() {
-	  setLastRecordPosition(0);
 	  BufferMgr bm = SimpleDB.bufferMgr();
 	  if(mybuffer != null)
 		  bm.unpin(mybuffer);
@@ -218,6 +218,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	  currentblk = mybuffer.block();
 	  mostRecentLSN.setBlkNum(currentblk.number());
 	  mostRecentLSN.setOffset(0);
+	  setLastRecordPosition(0);
    }
    
    /**

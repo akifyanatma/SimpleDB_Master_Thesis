@@ -214,9 +214,4 @@ public class BufferMgr {
    public String listBuffer() {
 	   return bufferMgr.listBuffer();
    }
-   
-   //Akif
-   public void setReplacementPolicy(SimpleDB.bufferReplacementPolicy pPolicy) {
-	   bufferMgr.setReplacementPolicy(pPolicy);
-   }
 }
