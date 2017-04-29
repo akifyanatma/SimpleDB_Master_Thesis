@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import simpledb.buffer.Buffer;
+import simpledb.buffer.BufferMgr;
 import simpledb.file.Block;
 import simpledb.file.FileMgr;
 import simpledb.file.Page;
@@ -14,14 +15,15 @@ import simpledb.server.SimpleDB;
 public class LogForwardIterator implements Iterator<BasicLogRecord> {
 	
 	private Block blk;
-	private Page pg = new Page();
+	//private Page pg = new Page();
+	private Buffer buff; //Akif
 	private int currentrec;
 	private ArrayList<Integer> offsetList;
 	
 	LogForwardIterator(String logfile) {
 	    this.blk = new Block(logfile, 0);
-	    pg.read(blk);
-	    currentrec = pg.getInt(LogMgr.LAST_POS);
+	    buff = SimpleDB.bufferMgr().pin(blk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
+	    currentrec = buff.getInt(LogMgr.LAST_POS);
 		offsetList = new ArrayList<Integer>();
 		createOffsetList();
 	}
@@ -31,8 +33,8 @@ public class LogForwardIterator implements Iterator<BasicLogRecord> {
 		FileMgr fm = SimpleDB.fileMgr();
 		int fileSize = fm.size(blk.fileName());
 		
-		int lastOffset = pg.getInt(LogMgr.LAST_POS);//Son offsetten sonra record olmadigi icin okuma yapilmamali
-		if(currentrec == pg.getInt(lastOffset) && blk.number() == (fileSize-1))
+		int lastOffset = buff.getInt(LogMgr.LAST_POS);//Son offsetten sonra record olmadigi icin okuma yapilmamali
+		if(currentrec == buff.getInt(lastOffset) && blk.number() == (fileSize-1))
 			return false;
 		else
 			return true;
@@ -40,18 +42,22 @@ public class LogForwardIterator implements Iterator<BasicLogRecord> {
 
 	@Override
 	public BasicLogRecord next() {
-		int lastOffset = pg.getInt(LogMgr.LAST_POS);//Son offsetten sonra record olmadigi icin okuma yapilmamali
-		if (currentrec == pg.getInt(lastOffset)) 
+		int lastOffset = buff.getInt(LogMgr.LAST_POS);//Son offsetten sonra record olmadigi icin okuma yapilmamali
+		if (currentrec == buff.getInt(lastOffset)) 
 			moveToNextBlock();
 		
 		currentrec = offsetList.remove(0);
-	    return new BasicLogRecord(pg, currentrec+INT_SIZE);			
+	    return new BasicLogRecord(buff, currentrec+INT_SIZE);			
 	}
 	
 	 private void moveToNextBlock() {
+		 BufferMgr bm = SimpleDB.bufferMgr();
+		   if(buff != null)
+			   bm.unpin(buff);
+		 
 		 blk = new Block(blk.fileName(), blk.number()+1);
-		 pg.read(blk);
-		 currentrec = pg.getInt(LogMgr.LAST_POS);
+		 buff = bm.pin(blk, SimpleDB.bufferTypes.LOG_BUFF_TYPE);
+		 currentrec = buff.getInt(LogMgr.LAST_POS);
 		 createOffsetList();		 
 	 }
 	 
@@ -59,13 +65,19 @@ public class LogForwardIterator implements Iterator<BasicLogRecord> {
 		 offsetList.clear();		 
 		 
 		 while(currentrec != 0) {
-			 currentrec = pg.getInt(currentrec);
+			 currentrec = buff.getInt(currentrec);
 			 offsetList.add(0, currentrec);
 		 }		 
 	 }
 	 
 	 public void remove() {
 		 throw new UnsupportedOperationException();
+	 }
+	 
+	 public void close() {
+		 BufferMgr bm = SimpleDB.bufferMgr();
+		 if(buff != null)
+			 bm.unpin(buff);
 	 }
 
 }

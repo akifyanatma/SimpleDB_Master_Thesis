@@ -1,6 +1,8 @@
 package simpledb.log;
 
 import static simpledb.file.Page.*;
+
+import simpledb.buffer.Buffer;
 import simpledb.file.Page;
 
 /**
@@ -15,7 +17,8 @@ import simpledb.file.Page;
  * @author Edward Sciore
  */
 public class BasicLogRecord {
-   private Page pg;
+   //private Page pg;
+   private Buffer buff; //Akif
    private int pos;
    
    /**
@@ -25,9 +28,15 @@ public class BasicLogRecord {
     * @param pg the page containing the log record
     * @param pos the position of the log record 
     */
-   public BasicLogRecord(Page pg, int pos) {
-      this.pg = pg;
-      this.pos = pos;
+//   public BasicLogRecord(Page pg, int pos) {
+//      this.pg = pg;
+//      this.pos = pos;
+//   }
+   
+   //Akif
+   public BasicLogRecord(Buffer buff, int pos) {
+	   this.buff = buff;
+	   this.pos = pos;
    }
    
    /**
@@ -35,10 +44,17 @@ public class BasicLogRecord {
     * assuming it is an integer.
     * @return the next value of the current log record
     */
+//   public int nextInt() {
+//      int result = pg.getInt(pos);
+//      pos += INT_SIZE;
+//      return result;
+//   }
+   
+   //Akif
    public int nextInt() {
-      int result = pg.getInt(pos);
-      pos += INT_SIZE;
-      return result;
+	   int result = buff.getInt(pos);
+	   pos += INT_SIZE;
+	   return result;
    }
    
    /**
@@ -46,9 +62,16 @@ public class BasicLogRecord {
     * assuming it is a string.
     * @return the next value of the current log record
     */
+//   public String nextString() {
+//      String result = pg.getString(pos);
+//      pos += STR_SIZE(result.length());
+//      return result;
+//   }
+   
+   //Akif
    public String nextString() {
-      String result = pg.getString(pos);
-      pos += STR_SIZE(result.length());
-      return result;
+	   String result = buff.getString(pos);
+	   pos += STR_SIZE(result.length());
+	   return result;
    }
 }
