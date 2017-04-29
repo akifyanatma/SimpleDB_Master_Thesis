@@ -50,8 +50,10 @@ class BasicBufferMgr {
 	   unpinnedLogBuffList = new ArrayList<Buffer>();
 	   unpinnedOtherBuffList = new ArrayList<Buffer>();
 	   int numLogBuffs = (int) (numbuffs*0.1);
-	   if(numLogBuffs<1)
-		   numLogBuffs = 2;
+//	   if(numLogBuffs<2)
+//		   numLogBuffs = 2;
+	   
+	   numLogBuffs = 3;
 	   
 	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
 	      

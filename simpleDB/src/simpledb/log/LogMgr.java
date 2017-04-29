@@ -91,6 +91,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
       flush();
       return new LogIterator(currentblk);
    }
+   
 
    /**
     * Appends a log record to the file.

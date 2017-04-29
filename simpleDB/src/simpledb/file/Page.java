@@ -43,7 +43,7 @@ public class Page {
     * A more realistic value would be 4K.
     */
    //public static final int BLOCK_SIZE = 400;
-	public static int BLOCK_SIZE = 400;//Akif
+	public static int BLOCK_SIZE = 100;//Akif
    
    /**
     * The size of an integer in bytes.
