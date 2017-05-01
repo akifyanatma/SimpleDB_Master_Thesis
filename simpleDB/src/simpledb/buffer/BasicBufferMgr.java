@@ -53,7 +53,7 @@ class BasicBufferMgr {
 //	   if(numLogBuffs<2)
 //		   numLogBuffs = 2;
 	   
-	   numLogBuffs = 3;
+	   numLogBuffs = 5;
 	   
 	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
 	      

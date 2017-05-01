@@ -6,12 +6,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-//import simpledb.log.BasicLogRecord;
-//import simpledb.log.LSN;
-//import simpledb.log.LogForwardIterator;
-//import simpledb.log.LogMgr;
-//import simpledb.server.SimpleDB;
-
 import simpledb.log.BasicLogRecord;
 import simpledb.log.LSN;
 import simpledb.log.LogForwardIterator;

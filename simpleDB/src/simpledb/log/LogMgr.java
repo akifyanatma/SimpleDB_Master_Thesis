@@ -87,14 +87,18 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * which will be returned in reverse order starting with the most recent.
     * @see java.lang.Iterable#iterator()
     */
+//   public synchronized Iterator<BasicLogRecord> iterator() {
+//      flush();
+//      return new LogIterator(currentblk);
+//   }
+   
+   //Akif
    public synchronized Iterator<BasicLogRecord> iterator() {
-      flush();
-      return new LogIterator(currentblk);
+	   return new LogIterator(currentblk);
    }
    
    //Akif
    public synchronized Iterator<BasicLogRecord> forwardIterator() {
-	   flush();
 	   return new LogForwardIterator(logfile);
    }
    
