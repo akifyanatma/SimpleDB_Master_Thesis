@@ -14,6 +14,14 @@ import simpledb.log.LogMgr;
 import simpledb.server.SimpleDB;
 import simpledb.tx.recovery.RecoveryMgr;
 
+/*
+ * This test requires forwardIterator() function within LogMgr. 
+ * ForwardIteration enables to display Log file.
+ * Passing this test requires to implement LogForwardIterator class. 
+ * This class is similar to LogIterator. Use DB buffers during iteration 
+ * like LogIterator does. 
+ */
+
 public class LogTest1 {
 
 	@Test

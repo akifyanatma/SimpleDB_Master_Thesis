@@ -176,4 +176,9 @@ public class FileMgr {
    public int blocksWritten() {
 	   return blocksWritten;
    }
+   
+   //Akif
+   public int getBlockReadCount() {
+	   return blocksRead;
+   }
 }
