@@ -40,8 +40,7 @@ public class LogTest4 {
 	public void test() {
 		int NUMOFLOGRECORDS=20;
 		Page.BLOCK_SIZE = 500;
-		//SimpleDB.BUFFER_POOL_SIZE = 2;
-		SimpleDB.BUFFER_SIZE = 3;
+		SimpleDB.BUFFER_SIZE = 2;
 		SimpleDB.BUFFER_REPLACEMENT_POLICY = SimpleDB.bufferReplacementPolicy.LRU;
 		SimpleDB.initFileLogAndBufferMgr("logtest4VT");
 		BufferMgr bm = SimpleDB.bufferMgr();

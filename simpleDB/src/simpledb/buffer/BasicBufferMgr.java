@@ -49,14 +49,17 @@ class BasicBufferMgr {
 	   loadedBuffMap = new HashMap<Block, Buffer>();
 	   unpinnedLogBuffList = new ArrayList<Buffer>();
 	   unpinnedOtherBuffList = new ArrayList<Buffer>();
-	   int numLogBuffs = (int) (numbuffs*0.1);
-//	   if(numLogBuffs<2)
-//		   numLogBuffs = 2;
 	   
-	   numLogBuffs = 5;
+	   numAvailable = numbuffs;
 	   
-	   numAvailable = numbuffs-numLogBuffs ; //Log icin ayrilan bufferlar available gozukmuyor
-	      
+	   int numLogBuffs = 0; //Buffer type kontrolu yapilmiyorsa tum bufferlar OTHER tipinde olacaktir ve havuz ortak kullanilacaktir.
+	   
+	   if(SimpleDB.BUFFER_TYPE_CONTROL == true) {
+		   numLogBuffs = (int) (numbuffs*0.1);
+		   if(numLogBuffs<2)
+			   numLogBuffs = 2;
+	   }
+		     	      
 	   for (int i=0; i<numbuffs; i++) {		   
 		   if(i<numbuffs - numLogBuffs) {
 			   bufferpool[i] = new Buffer(i, SimpleDB.bufferTypes.OTHER_BUFF_TYPE); //Bufferlara id ve tip eklendi.
@@ -109,7 +112,7 @@ class BasicBufferMgr {
 	   //Aranan blok map icindeki bufferlardan birinde bulunmussa ve unpinned listelerinde de yer alýyorsa
 	   //unpinned listelerinden cikarilmalidir.
 	   if(buff != null) {
-		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+		   if(SimpleDB.BUFFER_TYPE_CONTROL == true && pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   unpinnedLogBuffList.remove(buff);
 		   }
 		   else {
@@ -128,11 +131,11 @@ class BasicBufferMgr {
 	   		buff.assignToBlock(blk);
 	   		
 	   		if(oldBlock != null)
-		    	   loadedBuffMap.remove(oldBlock); //Artik Map'te eski blok anahtar olarak kullanilmamalidir.
+	   			loadedBuffMap.remove(oldBlock); //Artik Map'te eski blok anahtar olarak kullanilmamalidir.
 	   		
 	   		loadedBuffMap.put(blk, buff);//Yeni blok anahtar olarak kullanilarak buffer Map'e eklenir.
 	   	}
-	   	if (!buff.isPinned() && pBuffType==SimpleDB.bufferTypes.OTHER_BUFF_TYPE)
+	   	if (!buff.isPinned())
 	   		numAvailable--;
 	    buff.pin();
 	    return buff;
@@ -173,8 +176,7 @@ class BasicBufferMgr {
 		   loadedBuffMap.remove(oldBlock); //Artik Map'te eski blok anahtar olarak kullanilmamalidir.
 	   
 	   loadedBuffMap.put(newBlock, buff); //Yeni blok anahtar olarak kullanilarak buffer Map'e eklenir.
-	   if (pBuffType==SimpleDB.bufferTypes.OTHER_BUFF_TYPE)
-		   numAvailable--;
+	   numAvailable--;
 	   buff.pin();
 	   return buff;
    }
@@ -194,14 +196,14 @@ class BasicBufferMgr {
 	   buff.unpin();
 	   
 	   if(!buff.isPinned()) {
-		   if(buff.getType() == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+		   if(SimpleDB.BUFFER_TYPE_CONTROL == true && buff.getType() == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   unpinnedLogBuffList.add(buff); //Unpinned edilen buffer listenin sonuna eklendi.
 			                                  //Available buffer sayisi artirilmiyor.
 		   }
 		   else {
-			   unpinnedOtherBuffList.add(buff); //Unpinned edilen buffer listenin sonuna eklendi.
-			   numAvailable++;	
-		   }			   
+			   unpinnedOtherBuffList.add(buff); //Unpinned edilen buffer listenin sonuna eklendi.		  	
+		   }	
+		   numAvailable++;
 	   }
    }
    
@@ -243,7 +245,7 @@ class BasicBufferMgr {
 	   
 	   if(SimpleDB.BUFFER_REPLACEMENT_POLICY == SimpleDB.bufferReplacementPolicy.LRU) {
 		   //Aranan listedeki ilk buffer kullanilacak
-		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+		   if(SimpleDB.BUFFER_TYPE_CONTROL == true && pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   if(unpinnedLogBuffList.size() != 0)
 				   return unpinnedLogBuffList.remove(0);
 			   else
@@ -258,7 +260,7 @@ class BasicBufferMgr {
 	   }
 	   else if(SimpleDB.BUFFER_REPLACEMENT_POLICY == SimpleDB.bufferReplacementPolicy.MRU) {
 		   //Aranan listedeki son buffer kullanilacak
-		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+		   if(SimpleDB.BUFFER_TYPE_CONTROL == true && pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   if(unpinnedLogBuffList.size() != 0)
 				   return unpinnedLogBuffList.remove(unpinnedLogBuffList.size()-1);
 			   else
@@ -273,7 +275,7 @@ class BasicBufferMgr {
 	   }
 	   else {
 		   //Naive stratejisinin uygulanmasi
-		   if(pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
+		   if(SimpleDB.BUFFER_TYPE_CONTROL == true && pBuffType == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 			   for (Buffer buff : bufferpool) {
 				   if(!buff.isPinned() && buff.getType() == SimpleDB.bufferTypes.LOG_BUFF_TYPE) {
 					   unpinnedLogBuffList.remove(buff);

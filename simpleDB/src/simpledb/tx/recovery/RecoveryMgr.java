@@ -3,6 +3,7 @@ package simpledb.tx.recovery;
 import static simpledb.tx.recovery.LogRecord.*;
 import simpledb.file.Block;
 import simpledb.log.LSN;
+import simpledb.log.LogIterator;
 import simpledb.buffer.Buffer;
 import simpledb.server.SimpleDB;
 import java.util.*;
@@ -138,16 +139,31 @@ public class RecoveryMgr {
     * for the transaction,
     * until it finds the transaction's START record.
     */
+//   private void doRollback() {
+//      Iterator<LogRecord> iter = new LogRecordIterator();
+//      while (iter.hasNext()) {
+//         LogRecord rec = iter.next();
+//         if (rec.txNumber() == txnum) {
+//            if (rec.op() == START)
+//               return;
+//            rec.undo(txnum);
+//         }
+//      }
+//   }
+   
+   //Akif
    private void doRollback() {
-      Iterator<LogRecord> iter = new LogRecordIterator();
-      while (iter.hasNext()) {
-         LogRecord rec = iter.next();
-         if (rec.txNumber() == txnum) {
-            if (rec.op() == START)
-               return;
-            rec.undo(txnum);
-         }
-      }
+	   Iterator<LogRecord> iter = new LogRecordIterator();
+	   while (iter.hasNext()) {
+		   LogRecord rec = iter.next();
+	       if (rec.txNumber() == txnum) {
+	    	   if (rec.op() == START)
+	    		   return;
+	    	   rec.undo(txnum);
+	       }
+	   }
+	   
+	   ((LogIterator) SimpleDB.logMgr().rewardIter).close(); //Iterasyon icin kullanilan buffer'i unpin etmeye yarar.
    }
 
    /**
@@ -158,18 +174,35 @@ public class RecoveryMgr {
     * The method stops when it encounters a CHECKPOINT record
     * or the end of the log.
     */
+//   private void doRecover() {
+//      Collection<Integer> finishedTxs = new ArrayList<Integer>();
+//      Iterator<LogRecord> iter = new LogRecordIterator();
+//      while (iter.hasNext()) {
+//         LogRecord rec = iter.next();
+//         if (rec.op() == CHECKPOINT)
+//            return;
+//         if (rec.op() == COMMIT || rec.op() == ROLLBACK)
+//            finishedTxs.add(rec.txNumber());
+//         else if (!finishedTxs.contains(rec.txNumber()))
+//            rec.undo(txnum);
+//      }
+//   }
+   
+   //Akif
    private void doRecover() {
-      Collection<Integer> finishedTxs = new ArrayList<Integer>();
-      Iterator<LogRecord> iter = new LogRecordIterator();
-      while (iter.hasNext()) {
-         LogRecord rec = iter.next();
-         if (rec.op() == CHECKPOINT)
-            return;
-         if (rec.op() == COMMIT || rec.op() == ROLLBACK)
-            finishedTxs.add(rec.txNumber());
-         else if (!finishedTxs.contains(rec.txNumber()))
-            rec.undo(txnum);
-      }
+	   Collection<Integer> finishedTxs = new ArrayList<Integer>();
+	   Iterator<LogRecord> iter = new LogRecordIterator();
+	   while (iter.hasNext()) {
+		   LogRecord rec = iter.next();
+	       if (rec.op() == CHECKPOINT)
+	    	   return;
+	       if (rec.op() == COMMIT || rec.op() == ROLLBACK)
+	    	   finishedTxs.add(rec.txNumber());
+	       else if (!finishedTxs.contains(rec.txNumber()))
+	    	   rec.undo(txnum);
+	   }
+	   
+	   ((LogIterator) SimpleDB.logMgr().rewardIter).close(); //Iterasyon icin kullanilan buffer'i unpin etmeye yarar.
    }
 
    /**

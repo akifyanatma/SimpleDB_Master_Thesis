@@ -45,7 +45,7 @@ public class LogTest2 {
 	public void test() {
 		int NUMOFLOGRECORDS=20;
 		Page.BLOCK_SIZE=100;
-		SimpleDB.BUFFER_SIZE=7;
+		SimpleDB.BUFFER_SIZE=5;
 		SimpleDB.BUFFER_REPLACEMENT_POLICY = SimpleDB.bufferReplacementPolicy.LRU;
 		SimpleDB.initFileLogAndBufferMgr("logtest2VT");
 		BufferMgr bm=SimpleDB.bufferMgr();		

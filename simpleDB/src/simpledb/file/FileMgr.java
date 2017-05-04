@@ -116,11 +116,19 @@ public class FileMgr {
     * @param bb  the bytebuffer
     * @return a reference to the newly-created block.
     */
+//   synchronized Block append(String filename, ByteBuffer bb) {
+//      int newblknum = size(filename);
+//      Block blk = new Block(filename, newblknum);
+//      write(blk, bb);
+//      return blk;
+//   }
+   
+   //Akif
    synchronized Block append(String filename, ByteBuffer bb) {
-      int newblknum = size(filename);
-      Block blk = new Block(filename, newblknum);
-      write(blk, bb);
-      return blk;
+	   int newblknum = size(filename);
+	   Block blk = new Block(filename, newblknum);
+	   //write(blk, bb); //Dosyaya yeni blok eklerken fazladan write sayisini azaltmak icin yapildi.
+	   return blk;
    }
 
    /**

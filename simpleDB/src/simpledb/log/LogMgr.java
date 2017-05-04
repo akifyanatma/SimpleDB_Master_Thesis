@@ -35,6 +35,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private LSN mostRecentLSN = new LSN(-1,-1); //Akif, en son flush edilen log blogu numarasi ve offset bilgileri
    private LSN currentLSN = new LSN(-1,-1); //Akif, en son eklenen kayit icin log blogu numarasi ve offset bilgileri
    
+   public Iterator<BasicLogRecord> rewardIter; //Akif
+   public Iterator<BasicLogRecord> forwardIter; //Akif
+   
    /**
     * Creates the manager for the specified log file.
     * If the log file does not yet exist, it is created
@@ -78,8 +81,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    public void flush(LSN lsn) {
-	   if (mostRecentLSN.compareTo(lsn) < 0)
-		   flush();
+	   if (mostRecentLSN.compareTo(lsn) < 0) 
+		   flush(); 
    }
    
    /**
@@ -94,12 +97,14 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    public synchronized Iterator<BasicLogRecord> iterator() {
-	   return new LogIterator(currentblk);
+	   rewardIter = new LogIterator(currentblk);
+	   return rewardIter;
    }
    
    //Akif
    public synchronized Iterator<BasicLogRecord> forwardIterator() {
-	   return new LogForwardIterator(logfile);
+	   forwardIter = new LogForwardIterator(logfile);
+	   return forwardIter; 	   
    }
    
 
@@ -132,7 +137,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	   for (Object obj : rec)
 		   recsize += size(obj);
 	   if (currentpos + recsize >= BLOCK_SIZE){ // the log record doesn't fit,
-		   flush();        // so move to the next block.
+		   if(mostRecentLSN.compareTo(currentLSN) < 0)
+			   flush();        // so move to the next block.
 	       appendNewBlock();
 	   }
 	   for (Object obj : rec)

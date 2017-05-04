@@ -11,6 +11,30 @@ import simpledb.log.LSN;
 import simpledb.log.LogMgr;
 import simpledb.server.SimpleDB;
 
+/*
+ * Similiar to the previous test.
+ * This test has many "concurrent" forward / backward iterations over the log file. 
+ * Different combinations of concurrent execution is possible: test3a and test3b, both is the same. 
+ * LogMgr, LogIterator and LogForwardIterator uses DB buffers. This reduces the R/W stats during iterations.
+ * LSN is <blockid, offset>.
+ * The aim is to understand "the advantage" of buffer usage during iteration and to
+ * calculate R/W stats.
+ * 
+ * Buffer rep. policy is set to LRU.
+ * Same logrecords as the previous test (logtest2). 
+ *  Buffer pool size = 5     --> change this value as 10 or above to see expected R/W stats.
+ *  NUMOFLOGRECORDS=20;
+ *  int logrecsize = logrec[1].toString().length()+ 4+ 4+ 4;  
+ *  // 4 for string in page, 4 for "int logrec[0]", 4 for prev pointer.
+ *  // logresize = 46 B
+ *	int rpb=(Page.BLOCK_SIZE-4) / logrecsize;  
+ *	// -4, because first 4B int is used for pointing LASTPOS in the page
+ * 	int NUMOFLOGBLOCKS=NUMOFLOGRECORDS/rpb;
+ *	Thus, rpb=2
+ *  and NUMOFLOGBLOCKS = 10
+ *  
+ */
+
 public class LogTest3 {
 
 	@Test
