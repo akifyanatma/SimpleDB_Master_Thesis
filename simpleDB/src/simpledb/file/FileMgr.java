@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
 
+import simpledb.server.SimpleDB;
+
 /**
  * The SimpleDB file manager.
  * The database system stores its data as files within a specified directory.
@@ -126,6 +128,7 @@ public class FileMgr {
    //Akif
    synchronized Block append(String filename, ByteBuffer bb) {
 	   int newblknum = size(filename);
+	   newblknum = newblknum + SimpleDB.bufferMgr().size(filename,newblknum); //Bufferpool da henuz dosyaya yazilmamis olan bloklar hesaba katilmaya calisiliyor.
 	   Block blk = new Block(filename, newblknum);
 	   //write(blk, bb); //Dosyaya yeni blok eklerken fazladan write sayisini azaltmak icin yapildi.
 	   return blk;

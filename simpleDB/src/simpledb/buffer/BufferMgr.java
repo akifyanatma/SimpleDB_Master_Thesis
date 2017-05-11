@@ -205,9 +205,14 @@ public class BufferMgr {
    }
    
    //Akif
-   public void writeBuffContent(Buffer buff)
-   {
-	   bufferMgr.writeBuffContent(buff);
+   //Bufferpool icinde henuz dosyasina yazilmamis olan bloklarin sayisi belirleniyor.
+   public synchronized int size(String filename, int blockID){
+	   int blkid = blockID;
+       int fileBlocksInBufferPool = 0;
+       while(bufferMgr.findExistingBuffer(new Block(filename,blkid++)) !=null) // BasicBufferMgr'da bu fonkiyondaki private'i kaldýrdk
+    	   fileBlocksInBufferPool++;
+
+       return fileBlocksInBufferPool;
    }
    
    //Akif

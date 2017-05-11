@@ -192,10 +192,19 @@ public class Transaction {
     * @param filename the name of the file
     * @return the number of blocks in the file
     */
+//   public int size(String filename) {
+//      Block dummyblk = new Block(filename, END_OF_FILE);
+//      concurMgr.sLock(dummyblk);
+//      return SimpleDB.fileMgr().size(filename);
+//   }
+   
+   //Akif
+   //Bufferpool da henuz dosyaya yazilmamis olan bloklar hesaba katilmaya calisiliyor.
    public int size(String filename) {
-      Block dummyblk = new Block(filename, END_OF_FILE);
-      concurMgr.sLock(dummyblk);
-      return SimpleDB.fileMgr().size(filename);
+	   Block dummyblk = new Block(filename, END_OF_FILE);
+	   concurMgr.sLock(dummyblk);
+	   int blocksInDisk = SimpleDB.fileMgr().size(filename);
+	   return blocksInDisk+ SimpleDB.bufferMgr().size(filename,blocksInDisk);
    }
    
    /**

@@ -226,7 +226,7 @@ class BasicBufferMgr {
    
    //Akif
    //Aranan blok map'te var mi diye bakilmaktadir.
-   private Buffer findExistingBuffer(Block blk) {
+   public Buffer findExistingBuffer(Block blk) {
 	   if(loadedBuffMap.containsKey(blk))
 		   return loadedBuffMap.get(blk);	
 	   else 
@@ -296,13 +296,7 @@ class BasicBufferMgr {
 	   }
 	      
    }
-   
-   //Akif
-   public void writeBuffContent(Buffer buff)
-   {
-	   buff.writeContent();
-   }
-   
+      
    //Akif
    public String listBuffer() {	   
 	   int id;

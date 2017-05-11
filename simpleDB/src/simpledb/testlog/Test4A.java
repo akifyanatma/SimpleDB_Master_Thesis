@@ -33,12 +33,21 @@ public class Test4A implements Runnable {
 			System.out.println("LSN for logrec " + i + ": " + lsn.toString());
 			if(i==9){
 				try {
+					System.out.println("Thread 1 is sleeping");
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
+//			if(i==18){
+//				lm.flush(new LSN(1, 418));
+//			}
+//			if(i==19){
+//				lm.flush(new LSN(1, 464));
+//			}
+			
 			System.out.println(bm.listBuffer());
 			System.out.println("R:" + fm.blocksRead() + " \\ W:"+ fm.blocksWritten());
 			System.out.println("*");

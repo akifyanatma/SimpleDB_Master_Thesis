@@ -31,7 +31,9 @@ public class LogForwardIterator implements Iterator<BasicLogRecord> {
 	@Override
 	public boolean hasNext() {
 		FileMgr fm = SimpleDB.fileMgr();
-		int fileSize = fm.size(blk.fileName());
+		int blocksInDisk = SimpleDB.fileMgr().size(blk.fileName());
+		int blocksInBuffPoll = SimpleDB.bufferMgr().size(blk.fileName(),blocksInDisk); //Bufferpool da henuz dosyaya yazilmamis olan bloklar hesaba katilmaya calisiliyor.
+		int fileSize = blocksInDisk + blocksInBuffPoll;
 		
 		int lastOffset = buff.getInt(LogMgr.LAST_POS);//Son offsetten sonra record olmadigi icin okuma yapilmamali
 		if(currentrec == buff.getInt(lastOffset) && blk.number() == (fileSize-1))

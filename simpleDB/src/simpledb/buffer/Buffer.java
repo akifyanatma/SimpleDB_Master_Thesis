@@ -22,7 +22,7 @@ public class Buffer {
    private int pins = 0;
    private int modifiedBy = -1;  // negative means not modified
    //private int logSequenceNumber = -1; // negative means no corresponding log record
-   private LSN logSequenceNumber = new LSN(-1,-1);//Akif
+   private LSN logSequenceNumber = LSN.DUMMY;//Akif
 
    /**
     * Creates a new buffer, wrapping a new 
@@ -94,7 +94,7 @@ public class Buffer {
    //Akif
    public void setInt(int offset, int val, int txnum, LSN lsn) {
 	   modifiedBy = txnum;
-	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0)
+	   if(lsn.compareTo(LSN.DUMMY) > 0)
 		   logSequenceNumber.copyFrom(lsn);
 	   contents.setInt(offset, val);
    }
@@ -123,7 +123,7 @@ public class Buffer {
    //Akif
    public void setString(int offset, String val, int txnum, LSN lsn) {
 	   modifiedBy = txnum;
-	   if (lsn.getBlkNum() >= 0 && lsn.getOffset() >= 0)
+	   if(lsn.compareTo(LSN.DUMMY) > 0)
 		   logSequenceNumber.copyFrom(lsn);
 	   contents.setString(offset, val);
    }
@@ -144,12 +144,21 @@ public class Buffer {
     * record has been written to disk prior to writing
     * the page to disk.
     */
-   void flush() {
-      if (modifiedBy >= 0) {
-         SimpleDB.logMgr().flush(logSequenceNumber);
-         contents.write(blk);
-         modifiedBy = -1;
-      }
+//   void flush() {
+//      if (modifiedBy >= 0) {
+//         SimpleDB.logMgr().flush(logSequenceNumber);
+//         contents.write(blk);
+//         modifiedBy = -1;
+//      }
+//   }
+   
+   //Akif
+   public void flush() {
+	   if (modifiedBy >= 0) {
+		   SimpleDB.logMgr().flush(logSequenceNumber);
+		   contents.write(blk);
+	       modifiedBy = -1;
+	   }
    }
 
    /**
@@ -223,12 +232,7 @@ public class Buffer {
    public SimpleDB.bufferTypes getType() {
 	   return type;
    }
-   
-   //Akif
-   public void writeContent() {
-	   contents.write(blk);
-   }
-   
+      
    //Akif
    public int getPins() {
 	   return pins;
@@ -241,4 +245,5 @@ public class Buffer {
 	   else
 		   return -1; //Buffer dolu degilse.
    }
+ 
 }

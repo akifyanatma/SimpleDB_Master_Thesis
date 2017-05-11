@@ -32,8 +32,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private Block currentblk;
    private int currentpos;
    
-   private LSN mostRecentLSN = new LSN(-1,-1); //Akif, en son flush edilen log blogu numarasi ve offset bilgileri
-   private LSN currentLSN = new LSN(-1,-1); //Akif, en son eklenen kayit icin log blogu numarasi ve offset bilgileri
+   private LSN mostRecentLSN = new LSN(0,0); //Akif, en son flush edilen log blogu numarasi ve offset bilgileri
+   private LSN currentLSN = new LSN(0,0); //Akif, en son eklenen kayit icin log blogu numarasi ve offset bilgileri
    
    public Iterator<BasicLogRecord> rewardIter; //Akif
    public Iterator<BasicLogRecord> forwardIter; //Akif
@@ -82,7 +82,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    //Akif
    public void flush(LSN lsn) {
 	   if (mostRecentLSN.compareTo(lsn) < 0) 
-		   flush(); 
+		   flush();
    }
    
    /**
@@ -165,9 +165,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    //Akif
    private void appendVal(Object val) {
 	  if (val instanceof String)
-		  mybuffer.setString(currentpos, (String)val, -1, LSN.DUMMY);
+		  mybuffer.setString(currentpos, (String)val, 0, LSN.DUMMY);
 	  else
-	      mybuffer.setInt(currentpos, (Integer)val, -1, LSN.DUMMY);
+	      mybuffer.setInt(currentpos, (Integer)val, 0, LSN.DUMMY);
 	  currentpos += size(val);
    }
 
@@ -208,11 +208,11 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 //   }
    
    //Akif
-   private void flush() {
-	   System.out.println("--------------> flushing log page " + currentblk.number() + "\n");
-	   SimpleDB.bufferMgr().writeBuffContent(mybuffer);
+   private void flush() {   
+	   mybuffer.flush();
 	   mostRecentLSN.setBlkNum(currentblk.number());
 	   mostRecentLSN.setOffset(currentpos);
+	   System.out.println("--------------> flushing log page " + currentblk.number() + "\n");
    }
    
    /**
@@ -253,7 +253,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    private void finalizeRecord() {
-	   mybuffer.setInt(currentpos, getLastRecordPosition(), -1, LSN.DUMMY);
+	   mybuffer.setInt(currentpos, getLastRecordPosition(), 0, LSN.DUMMY);
 	   setLastRecordPosition(currentpos);
 	   currentpos += INT_SIZE;
    }
@@ -273,7 +273,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    
    //Akif
    private void setLastRecordPosition(int pos) {
-	   mybuffer.setInt(LAST_POS, pos, -1, LSN.DUMMY);
+	   mybuffer.setInt(LAST_POS, pos, 0, LSN.DUMMY);
    }
    
    //Akif

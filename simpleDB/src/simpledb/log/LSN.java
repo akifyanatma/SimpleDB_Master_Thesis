@@ -12,9 +12,9 @@ public class LSN implements Comparable<LSN> {
 		this.offset = offset;
 	}
 		
-	@Override
+	@Override	
 	public int compareTo(LSN lsnObj) {		
-		if(this.blknum >= lsnObj.getBlkNum() && this.offset >= lsnObj.getOffset())
+		if((this.blknum > lsnObj.getBlkNum()) || (this.blknum == lsnObj.getBlkNum() && this.offset >= lsnObj.getOffset()))
 			return 1;
 		
 		return -1;
