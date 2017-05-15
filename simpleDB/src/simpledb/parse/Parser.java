@@ -21,11 +21,21 @@ public class Parser {
       return lex.eatId();
    }
    
+//   public Constant constant() {
+//      if (lex.matchStringConstant())
+//         return new StringConstant(lex.eatStringConstant());
+//      else
+//         return new IntConstant(lex.eatIntConstant());
+//   }
+   
+   //Akif
    public Constant constant() {
-      if (lex.matchStringConstant())
-         return new StringConstant(lex.eatStringConstant());
-      else
-         return new IntConstant(lex.eatIntConstant());
+	   if (lex.matchStringConstant())
+		   return new StringConstant(lex.eatStringConstant());
+	   else if(lex.matchIntConstant())
+		   return new IntConstant(lex.eatIntConstant());
+	   else
+		   return new DoubleConstant(lex.eatDoubleConstant());	       
    }
    
    public Expression expression() {
@@ -202,20 +212,41 @@ public class Parser {
       return fieldType(fldname);
    }
    
+//   private Schema fieldType(String fldname) {
+//      Schema schema = new Schema();
+//      if (lex.matchKeyword("int")) {
+//         lex.eatKeyword("int");
+//         schema.addIntField(fldname);
+//      }
+//      else {
+//         lex.eatKeyword("varchar");
+//         lex.eatDelim('(');
+//         int strLen = lex.eatIntConstant();
+//         lex.eatDelim(')');
+//         schema.addStringField(fldname, strLen);
+//      }
+//      return schema;
+//   }
+   
+   //Akif
    private Schema fieldType(String fldname) {
-      Schema schema = new Schema();
-      if (lex.matchKeyword("int")) {
-         lex.eatKeyword("int");
-         schema.addIntField(fldname);
-      }
-      else {
-         lex.eatKeyword("varchar");
-         lex.eatDelim('(');
-         int strLen = lex.eatIntConstant();
-         lex.eatDelim(')');
-         schema.addStringField(fldname, strLen);
-      }
-      return schema;
+	   Schema schema = new Schema();
+	   if (lex.matchKeyword("int")) {
+		   lex.eatKeyword("int");
+	       schema.addIntField(fldname);
+	   }
+	   else if(lex.matchKeyword("double")) {
+		   lex.eatKeyword("double");
+	       schema.addDoubleField(fldname);
+	   }
+	   else {
+	         lex.eatKeyword("varchar");
+	         lex.eatDelim('(');
+	         int strLen = lex.eatIntConstant();
+	         lex.eatDelim(')');
+	         schema.addStringField(fldname, strLen);
+	   }
+	   return schema;
    }
    
 // Method for parsing create view commands

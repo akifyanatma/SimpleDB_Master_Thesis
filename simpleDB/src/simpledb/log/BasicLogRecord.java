@@ -41,6 +41,13 @@ public class BasicLogRecord {
       return result;
    }
    
+   //Akif
+   public double nextDouble() {
+	   double result = pg.getDouble(pos);
+	   pos += DOUBLE_SIZE;
+	   return result;
+   }
+   
    /**
     * Returns the next value of the current log record, 
     * assuming it is a string.

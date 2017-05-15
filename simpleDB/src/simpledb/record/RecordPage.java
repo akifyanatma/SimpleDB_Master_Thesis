@@ -60,6 +60,12 @@ public class RecordPage {
       return tx.getInt(blk, position);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   int position = fieldpos(fldname);
+	   return tx.getDouble(blk, position);
+   }
+   
    /**
     * Returns the string value stored for the
     * specified field of the current record.
@@ -80,6 +86,12 @@ public class RecordPage {
    public void setInt(String fldname, int val) {
       int position = fieldpos(fldname);
       tx.setInt(blk, position, val);
+   }
+   
+   //Akif
+   public void setDouble(String fldname, double val) {
+	   int position = fieldpos(fldname);
+	   tx.setDouble(blk, position, val);
    }
    
    /**

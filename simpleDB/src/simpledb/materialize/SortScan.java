@@ -110,6 +110,11 @@ public class SortScan implements Scan {
       return currentscan.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   return currentscan.getDouble(fldname);
+   }
+   
    /**
     * Gets the string value of the specified field
     * of the current scan.

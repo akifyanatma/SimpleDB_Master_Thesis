@@ -113,6 +113,14 @@ public class MergeJoinScan implements Scan {
          return s2.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   if (s1.hasField(fldname))
+		   return s1.getDouble(fldname);
+	   else
+	       return s2.getDouble(fldname);
+   }
+   
    /** 
     * Returns the string value of the specified field.
     * The value is obtained from whichever scan

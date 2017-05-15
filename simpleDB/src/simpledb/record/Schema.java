@@ -42,6 +42,11 @@ public class Schema {
       addField(fldname, INTEGER, 0);
    }
    
+   //Akif
+   public void addDoubleField(String fldname) {
+	   addField(fldname, DOUBLE, 0);
+   }
+   
    /**
     * Adds a string field to the schema.
     * The length is the conceptual length of the field.

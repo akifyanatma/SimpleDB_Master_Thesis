@@ -58,6 +58,18 @@ class RemoteResultSetImpl extends UnicastRemoteObject implements RemoteResultSet
          throw e;
       }
    }
+   
+   //Akif
+   public double getDouble(String fldname) throws RemoteException {
+		try {
+	      fldname = fldname.toLowerCase(); // to ensure case-insensitivity
+	      return s.getDouble(fldname);
+      }
+      catch(RuntimeException e) {
+         rconn.rollback();
+         throw e;
+      }
+   }
 
    /**
     * Returns the integer value of the specified field,

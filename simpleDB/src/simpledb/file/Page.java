@@ -50,6 +50,7 @@ public class Page {
     * a good idea to encode this value as a constant. 
     */
    public static final int INT_SIZE = Integer.SIZE / Byte.SIZE;
+   public static final int DOUBLE_SIZE = Double.SIZE / Byte.SIZE; //Akif
    
    /**
     * The maximum size, in bytes, of a string of length n.
@@ -130,6 +131,18 @@ public class Page {
       contents.putInt(val);
    }
    
+   //Akif
+   public synchronized double getDouble(int offset) {
+	   contents.position(offset);
+	   return contents.getDouble();
+   }
+   
+   //Akif
+   public synchronized void setDouble(int offset, double val) {
+	   contents.position(offset);
+	   contents.putDouble(val);
+   }
+   
    /**
     * Returns the string value at the specified offset of the page.
     * If a string was not stored at that location,
@@ -156,4 +169,5 @@ public class Page {
       contents.putInt(byteval.length);
       contents.put(byteval);
    }
+   
 }

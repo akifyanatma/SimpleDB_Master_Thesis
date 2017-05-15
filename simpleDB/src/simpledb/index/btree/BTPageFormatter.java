@@ -2,6 +2,7 @@ package simpledb.index.btree;
 
 import static simpledb.file.Page.*;
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import simpledb.file.Page;
 import simpledb.buffer.PageFormatter;
 import simpledb.record.TableInfo;
@@ -43,13 +44,25 @@ public class BTPageFormatter implements PageFormatter {
          makeDefaultRecord(page, pos);
    }
    
+//   private void makeDefaultRecord(Page page, int pos) {
+//      for (String fldname : ti.schema().fields()) {
+//         int offset = ti.offset(fldname);
+//         if (ti.schema().type(fldname) == INTEGER)
+//            page.setInt(pos + offset, 0);
+//         else
+//            page.setString(pos + offset, "");
+//      }
+//   }
+   
    private void makeDefaultRecord(Page page, int pos) {
-      for (String fldname : ti.schema().fields()) {
-         int offset = ti.offset(fldname);
-         if (ti.schema().type(fldname) == INTEGER)
-            page.setInt(pos + offset, 0);
-         else
-            page.setString(pos + offset, "");
-      }
+	   for (String fldname : ti.schema().fields()) {
+		   int offset = ti.offset(fldname);
+	       if (ti.schema().type(fldname) == INTEGER)
+	    	   page.setInt(pos + offset, 0);
+	       else if (ti.schema().type(fldname) == DOUBLE)
+	    	   page.setDouble(pos + offset, 0);
+	       else
+	    	   page.setString(pos + offset, "");
+	   }
    }
 }

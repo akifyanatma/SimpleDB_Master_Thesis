@@ -21,6 +21,9 @@ public interface UpdateScan extends Scan {
     */
    public void setInt(String fldname, int val);
    
+   //Akif
+   public void setDouble(String fldname, double val);
+   
    /**
     * Modifies the field value of the current record.
     * @param fldname the name of the field

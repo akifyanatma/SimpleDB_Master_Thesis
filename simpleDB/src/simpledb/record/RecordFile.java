@@ -71,6 +71,11 @@ public class RecordFile {
       return rp.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   return rp.getDouble(fldname);
+   }
+   
    /**
     * Returns the value of the specified field
     * in the current record.
@@ -89,6 +94,11 @@ public class RecordFile {
     */
    public void setInt(String fldname, int val) {
       rp.setInt(fldname, val);
+   }
+   
+   //Akif
+   public void setDouble(String fldname, double val) {
+	   rp.setDouble(fldname, val);
    }
    
    /**

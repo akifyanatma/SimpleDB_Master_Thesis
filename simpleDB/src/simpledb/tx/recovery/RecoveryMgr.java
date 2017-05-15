@@ -69,6 +69,16 @@ public class RecoveryMgr {
       else
          return new SetIntRecord(txnum, blk, offset, oldval).writeToLog();
    }
+   
+   //Akif
+   public int setDouble(Buffer buff, int offset, double newval) {
+	   double oldval = buff.getDouble(offset);
+	   Block blk = buff.block();
+	   if (isTempBlock(blk))
+		   return -1;
+	   else
+		   return new SetDoubleRecord(txnum, blk, offset, oldval).writeToLog();
+   }
 
    /**
     * Writes a setstring record to the log, and returns its lsn.

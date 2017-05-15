@@ -47,6 +47,11 @@ public class Buffer {
    public int getInt(int offset) {
       return contents.getInt(offset);
    }
+   
+   //Akif
+   public double getDouble(int offset) {
+	   return contents.getDouble(offset);
+   }
 
    /**
     * Returns the string value at the specified offset of the
@@ -79,6 +84,14 @@ public class Buffer {
       if (lsn >= 0)
 	      logSequenceNumber = lsn;
       contents.setInt(offset, val);
+   }
+   
+   //Akif
+   public void setDouble(int offset, double val, int txnum, int lsn) {
+	   modifiedBy = txnum;
+	   if (lsn >= 0)
+		   logSequenceNumber = lsn;
+	   contents.setDouble(offset, val);
    }
 
    /**

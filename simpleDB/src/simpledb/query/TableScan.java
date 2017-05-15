@@ -1,6 +1,7 @@
 package simpledb.query;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 
@@ -48,15 +49,30 @@ public class TableScan implements UpdateScan {
     * otherwise, the getString method is called.
     * @see simpledb.query.Scan#getVal(java.lang.String)
     */
+//   public Constant getVal(String fldname) {
+//      if (sch.type(fldname) == INTEGER)
+//         return new IntConstant(rf.getInt(fldname));
+//      else
+//         return new StringConstant(rf.getString(fldname));
+//   }
+   
+   //Akif
    public Constant getVal(String fldname) {
-      if (sch.type(fldname) == INTEGER)
-         return new IntConstant(rf.getInt(fldname));
-      else
-         return new StringConstant(rf.getString(fldname));
+	   if (sch.type(fldname) == INTEGER)
+		   return new IntConstant(rf.getInt(fldname));
+	   else if (sch.type(fldname) == DOUBLE)
+		   return new DoubleConstant(rf.getDouble(fldname));
+	   else
+		   return new StringConstant(rf.getString(fldname));
    }
    
    public int getInt(String fldname) {
       return rf.getInt(fldname);
+   }
+   
+   //Akif
+   public double getDouble(String fldname) {
+	  return rf.getDouble(fldname);
    }
    
    public String getString(String fldname) {
@@ -76,15 +92,30 @@ public class TableScan implements UpdateScan {
     * otherwise, the setString method is called.
     * @see simpledb.query.UpdateScan#setVal(java.lang.String, simpledb.query.Constant)
     */ 
+//   public void setVal(String fldname, Constant val) {
+//      if (sch.type(fldname) == INTEGER)
+//         rf.setInt(fldname, (Integer)val.asJavaVal());
+//      else
+//         rf.setString(fldname, (String)val.asJavaVal());
+//   }
+   
+   //Akif
    public void setVal(String fldname, Constant val) {
-      if (sch.type(fldname) == INTEGER)
-         rf.setInt(fldname, (Integer)val.asJavaVal());
-      else
-         rf.setString(fldname, (String)val.asJavaVal());
+	   if (sch.type(fldname) == INTEGER)
+		   rf.setInt(fldname, (Integer)val.asJavaVal());
+	   if (sch.type(fldname) == DOUBLE)
+		   rf.setDouble(fldname, (Double)val.asJavaVal());
+	   else
+	       rf.setString(fldname, (String)val.asJavaVal());
    }
    
    public void setInt(String fldname, int val) {
       rf.setInt(fldname, val);
+   }
+   
+   //Akif
+   public void setDouble(String fldname, double val) {
+	  rf.setDouble(fldname, val);
    }
    
    public void setString(String fldname, String val) {

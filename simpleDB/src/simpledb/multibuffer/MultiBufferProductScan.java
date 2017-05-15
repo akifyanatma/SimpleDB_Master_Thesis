@@ -85,6 +85,11 @@ public class MultiBufferProductScan implements Scan {
       return prodscan.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   return prodscan.getDouble(fldname);
+   }
+   
    /** 
     * Returns the string value of the specified field.
     * The value is obtained from whichever scan

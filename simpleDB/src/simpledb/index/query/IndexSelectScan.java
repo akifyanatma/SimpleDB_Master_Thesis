@@ -80,6 +80,11 @@ public class IndexSelectScan implements Scan {
       return ts.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   return ts.getDouble(fldname);
+   }
+   
    /**
     * Returns the value of the field of the current data record.
     * @see simpledb.query.Scan#getString(java.lang.String)

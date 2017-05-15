@@ -38,7 +38,10 @@ public interface Scan {
     * @param fldname the name of the field
     * @return the field's integer value in the current record
     */
-   public int      getInt(String fldname);
+   public int getInt(String fldname);
+   
+   //Akif
+   public double getDouble(String fldname);
    
    /**
     * Returns the value of the specified string field 

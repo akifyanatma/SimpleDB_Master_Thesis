@@ -1,6 +1,7 @@
 package simpledb.record;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import static simpledb.file.Page.*;
 import java.util.*;
 
@@ -86,11 +87,21 @@ public class TableInfo {
       return recordlen;
    }
    
+//   private int lengthInBytes(String fldname) {
+//      int fldtype = schema.type(fldname);
+//      if (fldtype == INTEGER)
+//         return INT_SIZE;
+//      else
+//         return STR_SIZE(schema.length(fldname));
+//   }
+   
    private int lengthInBytes(String fldname) {
-      int fldtype = schema.type(fldname);
-      if (fldtype == INTEGER)
-         return INT_SIZE;
-      else
-         return STR_SIZE(schema.length(fldname));
+	   int fldtype = schema.type(fldname);
+	   if (fldtype == INTEGER)
+		   return INT_SIZE;
+	   else if(fldtype == DOUBLE)
+		   return DOUBLE_SIZE;
+	   else
+		   return STR_SIZE(schema.length(fldname));
    }
 }

@@ -1,6 +1,7 @@
 package simpledb.multibuffer;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 import simpledb.file.Block;
@@ -75,11 +76,21 @@ public class ChunkScan implements Scan {
    /**
     * @see simpledb.query.Scan#getVal(java.lang.String)
     */
+//   public Constant getVal(String fldname) {
+//      if (sch.type(fldname) == INTEGER)
+//         return new IntConstant(rp.getInt(fldname));
+//      else
+//         return new StringConstant(rp.getString(fldname));
+//   }
+   
+   //Akif
    public Constant getVal(String fldname) {
-      if (sch.type(fldname) == INTEGER)
-         return new IntConstant(rp.getInt(fldname));
-      else
-         return new StringConstant(rp.getString(fldname));
+	   if (sch.type(fldname) == INTEGER)
+		   return new IntConstant(rp.getInt(fldname));
+	   if (sch.type(fldname) == DOUBLE)
+		   return new DoubleConstant(rp.getDouble(fldname));
+	   else
+	       return new StringConstant(rp.getString(fldname));
    }
    
    /**
@@ -87,6 +98,11 @@ public class ChunkScan implements Scan {
     */
    public int getInt(String fldname) {
       return rp.getInt(fldname);
+   }
+   
+   //Akif
+   public double getDouble(String fldname) {
+	   return rp.getDouble(fldname);
    }
    
    /**

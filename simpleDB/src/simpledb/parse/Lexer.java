@@ -43,6 +43,11 @@ public class Lexer {
       return tok.ttype == StreamTokenizer.TT_NUMBER;
    }
    
+   //Akif
+   public boolean matchDoubleConstant() {
+	   return tok.ttype == StreamTokenizer.TT_NUMBER;
+   }
+   
    /**
     * Returns true if the current token is a string.
     * @return true if the current token is a string
@@ -96,6 +101,15 @@ public class Lexer {
       return i;
    }
    
+   //Akif
+   public double eatDoubleConstant() {
+	   if (!matchDoubleConstant())
+		   throw new BadSyntaxException();
+	   double i = (double) tok.nval;
+	   nextToken();
+	   return i;
+   }
+   
    /**
     * Throws an exception if the current token is not 
     * a string. 
@@ -146,9 +160,18 @@ public class Lexer {
       }
    }
    
+//   private void initKeywords() {
+//      keywords = Arrays.asList("select", "from", "where", "and",
+//                               "insert", "into", "values", "delete", "update", "set", 
+//                               "create", "table", "int", "varchar", "view", "as", "index", "on");
+//   }
+   
+   //Akif
    private void initKeywords() {
-      keywords = Arrays.asList("select", "from", "where", "and",
-                               "insert", "into", "values", "delete", "update", "set", 
-                               "create", "table", "int", "varchar", "view", "as", "index", "on");
+	      keywords = Arrays.asList("select", "from", "where", "and",
+	                               "insert", "into", "values", "delete", "update", "set", 
+	                               "create", "table", "int", "varchar", "view", "as", "index", "on",
+	                               "double");
    }
+   
 }

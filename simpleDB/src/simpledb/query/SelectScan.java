@@ -56,6 +56,11 @@ public class SelectScan implements UpdateScan {
       return s.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   return s.getDouble(fldname);
+   }
+   
    public String getString(String fldname) {
       return s.getString(fldname);
    }
@@ -74,6 +79,12 @@ public class SelectScan implements UpdateScan {
    public void setInt(String fldname, int val) {
       UpdateScan us = (UpdateScan) s;
       us.setInt(fldname, val);
+   }
+   
+   //Akif
+   public void setDouble(String fldname, double val) {
+	  UpdateScan us = (UpdateScan) s;
+	  us.setDouble(fldname, val);
    }
    
    public void setString(String fldname, String val) {

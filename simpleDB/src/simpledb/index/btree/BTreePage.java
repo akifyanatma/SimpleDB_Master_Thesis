@@ -1,6 +1,7 @@
 package simpledb.index.btree;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import static simpledb.file.Page.*;
 import simpledb.file.Block;
 import simpledb.record.*;
@@ -191,17 +192,34 @@ public class BTreePage {
       return tx.getInt(currentblk, pos);
    }
    
+   //Akif
+   private double getDouble(int slot, String fldname) {
+	   int pos = fldpos(slot, fldname);
+	   return tx.getDouble(currentblk, pos);
+   }
+   
    private String getString(int slot, String fldname) {
       int pos = fldpos(slot, fldname);
       return tx.getString(currentblk, pos);
    }
    
+//   private Constant getVal(int slot, String fldname) {
+//      int type = ti.schema().type(fldname);
+//      if (type == INTEGER)
+//         return new IntConstant(getInt(slot, fldname));
+//      else
+//         return new StringConstant(getString(slot, fldname));
+//   }
+   
+   //Akif
    private Constant getVal(int slot, String fldname) {
-      int type = ti.schema().type(fldname);
-      if (type == INTEGER)
-         return new IntConstant(getInt(slot, fldname));
-      else
-         return new StringConstant(getString(slot, fldname));
+	   int type = ti.schema().type(fldname);
+	   if (type == INTEGER)
+		   return new IntConstant(getInt(slot, fldname));
+	   else if (type == DOUBLE)
+		   return new DoubleConstant(getDouble(slot, fldname));
+	   else
+		   return new StringConstant(getString(slot, fldname));
    }
    
    private void setInt(int slot, String fldname, int val) {
@@ -209,17 +227,33 @@ public class BTreePage {
       tx.setInt(currentblk, pos, val);
    }
    
+   private void setDouble(int slot, String fldname, double val) {
+	   int pos = fldpos(slot, fldname);
+	   tx.setDouble(currentblk, pos, val);
+   }
+   
    private void setString(int slot, String fldname, String val) {
       int pos = fldpos(slot, fldname);
       tx.setString(currentblk, pos, val);
    }
    
+//   private void setVal(int slot, String fldname, Constant val) {
+//      int type = ti.schema().type(fldname);
+//      if (type == INTEGER)
+//         setInt(slot, fldname, (Integer)val.asJavaVal());
+//      else
+//         setString(slot, fldname, (String)val.asJavaVal());
+//   }
+   
+   //Akif
    private void setVal(int slot, String fldname, Constant val) {
-      int type = ti.schema().type(fldname);
-      if (type == INTEGER)
-         setInt(slot, fldname, (Integer)val.asJavaVal());
-      else
-         setString(slot, fldname, (String)val.asJavaVal());
+	   int type = ti.schema().type(fldname);
+	   if (type == INTEGER)
+		   setInt(slot, fldname, (Integer)val.asJavaVal());
+	   else if (type == DOUBLE)
+		   setDouble(slot, fldname, (Double)val.asJavaVal());
+	   else
+	       setString(slot, fldname, (String)val.asJavaVal());
    }
    
    private void setNumRecs(int n) {

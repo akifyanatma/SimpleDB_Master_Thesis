@@ -1,6 +1,7 @@
 package simpledb.record;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import static simpledb.file.Page.*;
 import static simpledb.record.RecordPage.EMPTY;
 import simpledb.file.Page;
@@ -38,13 +39,26 @@ class RecordFormatter implements PageFormatter {
       }
    }
    
+//   private void makeDefaultRecord(Page page, int pos) {
+//      for (String fldname : ti.schema().fields()) {
+//         int offset = ti.offset(fldname);
+//         if (ti.schema().type(fldname) == INTEGER)
+//            page.setInt(pos + INT_SIZE + offset, 0);
+//         else
+//            page.setString(pos + INT_SIZE + offset, "");
+//      }
+//   }
+   
+   //Akif
    private void makeDefaultRecord(Page page, int pos) {
-      for (String fldname : ti.schema().fields()) {
-         int offset = ti.offset(fldname);
-         if (ti.schema().type(fldname) == INTEGER)
-            page.setInt(pos + INT_SIZE + offset, 0);
-         else
-            page.setString(pos + INT_SIZE + offset, "");
-      }
+	   for (String fldname : ti.schema().fields()) {
+		   int offset = ti.offset(fldname);
+		   if (ti.schema().type(fldname) == INTEGER)
+			   page.setInt(pos + INT_SIZE + offset, 0);
+		   else if (ti.schema().type(fldname) == DOUBLE)
+			   page.setDouble(pos + DOUBLE_SIZE + offset, 0);
+	       else
+	    	   page.setString(pos + INT_SIZE + offset, "");
+	   }
    }
 }

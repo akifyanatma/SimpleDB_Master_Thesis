@@ -2,6 +2,7 @@ package simpledb.remote;
 
 import simpledb.record.Schema;
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -69,13 +70,26 @@ public class RemoteMetaDataImpl extends UnicastRemoteObject implements RemoteMet
     * probably get displayed improperly.
     * @see simpledb.remote.RemoteMetaData#getColumnDisplaySize(int)
     */
+//   public int getColumnDisplaySize(int column) throws RemoteException {
+//      String fldname = getColumnName(column);
+//      int fldtype = sch.type(fldname);
+//      int fldlength = sch.length(fldname);
+//      if (fldtype == INTEGER)
+//         return 6;  // accommodate 6-digit integers
+//      else
+//         return fldlength;
+//   }
+   
+   //Akif
    public int getColumnDisplaySize(int column) throws RemoteException {
-      String fldname = getColumnName(column);
-      int fldtype = sch.type(fldname);
-      int fldlength = sch.length(fldname);
-      if (fldtype == INTEGER)
-         return 6;  // accommodate 6-digit integers
-      else
-         return fldlength;
+	   String fldname = getColumnName(column);
+	   int fldtype = sch.type(fldname);
+	   int fldlength = sch.length(fldname);
+	   if (fldtype == INTEGER)
+		   return 6;  // accommodate 6-digit integers
+	   if (fldtype == DOUBLE)
+		   return 12;  // bu degeri keyfi rastgele verdim
+	   else
+		   return fldlength;
    }
 }

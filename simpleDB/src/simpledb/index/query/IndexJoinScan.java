@@ -97,6 +97,14 @@ public class IndexJoinScan implements Scan {
          return s.getInt(fldname);
    }
    
+   //Akif
+   public double getDouble(String fldname) {
+	   if (ts.hasField(fldname))
+		   return ts.getDouble(fldname);
+	   else  
+	       return s.getDouble(fldname);
+   }
+   
    /**
     * Returns the string value of the specified field.
     * @see simpledb.query.Scan#getVal(java.lang.String)

@@ -1,6 +1,7 @@
 package simpledb.metadata;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import static simpledb.file.Page.BLOCK_SIZE;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
@@ -101,16 +102,31 @@ public class IndexInfo {
     * via the table's metadata.
     * @return the schema of the index records
     */
+//   private Schema schema() {
+//      Schema sch = new Schema();
+//      sch.addIntField("block");
+//      sch.addIntField("id");
+//      if (ti.schema().type(fldname) == INTEGER)
+//         sch.addIntField("dataval");
+//      else {
+//         int fldlen = ti.schema().length(fldname);
+//         sch.addStringField("dataval", fldlen);
+//      }
+//      return sch;
+//   }
+   
    private Schema schema() {
-      Schema sch = new Schema();
-      sch.addIntField("block");
-      sch.addIntField("id");
-      if (ti.schema().type(fldname) == INTEGER)
-         sch.addIntField("dataval");
-      else {
-         int fldlen = ti.schema().length(fldname);
-         sch.addStringField("dataval", fldlen);
-      }
-      return sch;
+	   Schema sch = new Schema();
+	   sch.addIntField("block");
+	   sch.addIntField("id");
+	   if (ti.schema().type(fldname) == INTEGER)
+		   sch.addIntField("dataval");
+	   else if (ti.schema().type(fldname) == DOUBLE)
+		   sch.addDoubleField("dataval");
+	   else {
+		   int fldlen = ti.schema().length(fldname);
+	       sch.addStringField("dataval", fldlen);
+	   }
+	   return sch;
    }
 }

@@ -101,12 +101,23 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * currentpos.  Then increments currentpos by the size of the value.
     * @param val the integer or string to be added to the page
     */
+//   private void appendVal(Object val) {
+//      if (val instanceof String)
+//         mypage.setString(currentpos, (String)val);
+//      else
+//         mypage.setInt(currentpos, (Integer)val);
+//      currentpos += size(val);
+//   }
+   
+   //Akif
    private void appendVal(Object val) {
-      if (val instanceof String)
-         mypage.setString(currentpos, (String)val);
-      else
-         mypage.setInt(currentpos, (Integer)val);
-      currentpos += size(val);
+	   if (val instanceof String)
+		   mypage.setString(currentpos, (String)val);
+	   else if(val instanceof Double)
+		   mypage.setDouble(currentpos, (Double)val);
+	   else 
+		   mypage.setInt(currentpos, (Integer)val);
+	   currentpos += size(val);
    }
 
    /**
@@ -114,13 +125,25 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     * @param val the value
     * @return the size of the value, in bytes
     */
+//   private int size(Object val) {
+//      if (val instanceof String) {
+//         String sval = (String) val;
+//         return STR_SIZE(sval.length());
+//      }
+//      else
+//         return INT_SIZE;
+//   }
+   
+   //Akif
    private int size(Object val) {
-      if (val instanceof String) {
-         String sval = (String) val;
-         return STR_SIZE(sval.length());
-      }
-      else
-         return INT_SIZE;
+	   if (val instanceof String) {
+		   String sval = (String) val;
+	       return STR_SIZE(sval.length());
+	   }
+	   else if(val instanceof Double)
+		   return DOUBLE_SIZE;
+	   else
+		   return INT_SIZE;
    }
 
    /**

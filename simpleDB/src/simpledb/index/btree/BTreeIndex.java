@@ -1,6 +1,7 @@
 package simpledb.index.btree;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
@@ -26,34 +27,69 @@ public class BTreeIndex implements Index {
     * @param leafsch the schema of the leaf index records
     * @param tx the calling transaction
     */
+//   public BTreeIndex(String idxname, Schema leafsch, Transaction tx) {
+//      this.tx = tx;
+//      // deal with the leaves
+//      String leaftbl = idxname + "leaf";
+//      leafTi = new TableInfo(leaftbl, leafsch);
+//      if (tx.size(leafTi.fileName()) == 0)
+//         tx.append(leafTi.fileName(), new BTPageFormatter(leafTi, -1));
+//
+//      // deal with the directory
+//      Schema dirsch = new Schema();
+//      dirsch.add("block",   leafsch);
+//      dirsch.add("dataval", leafsch);
+//      String dirtbl = idxname + "dir";
+//      dirTi = new TableInfo(dirtbl, dirsch);
+//      rootblk = new Block(dirTi.fileName(), 0);
+//      if (tx.size(dirTi.fileName()) == 0)
+//         // create new root block
+//         tx.append(dirTi.fileName(), new BTPageFormatter(dirTi, 0));
+//      BTreePage page = new BTreePage(rootblk, dirTi, tx);
+//      if (page.getNumRecs() == 0) {
+//			// insert initial directory entry
+//         int fldtype = dirsch.type("dataval");
+//         Constant minval = (fldtype == INTEGER) ?
+//            new IntConstant(Integer.MIN_VALUE) :
+//            new StringConstant("");
+//         page.insertDir(0, minval, 0);
+//		}
+//      page.close();
+//   }
+   
+   //Akif
    public BTreeIndex(String idxname, Schema leafsch, Transaction tx) {
-      this.tx = tx;
-      // deal with the leaves
-      String leaftbl = idxname + "leaf";
-      leafTi = new TableInfo(leaftbl, leafsch);
-      if (tx.size(leafTi.fileName()) == 0)
-         tx.append(leafTi.fileName(), new BTPageFormatter(leafTi, -1));
+	   this.tx = tx;
+	   // deal with the leaves
+	   String leaftbl = idxname + "leaf";
+	   leafTi = new TableInfo(leaftbl, leafsch);
+	   if (tx.size(leafTi.fileName()) == 0)
+		   tx.append(leafTi.fileName(), new BTPageFormatter(leafTi, -1));
 
-      // deal with the directory
-      Schema dirsch = new Schema();
-      dirsch.add("block",   leafsch);
-      dirsch.add("dataval", leafsch);
-      String dirtbl = idxname + "dir";
-      dirTi = new TableInfo(dirtbl, dirsch);
-      rootblk = new Block(dirTi.fileName(), 0);
-      if (tx.size(dirTi.fileName()) == 0)
-         // create new root block
-         tx.append(dirTi.fileName(), new BTPageFormatter(dirTi, 0));
-      BTreePage page = new BTreePage(rootblk, dirTi, tx);
-      if (page.getNumRecs() == 0) {
-			// insert initial directory entry
-         int fldtype = dirsch.type("dataval");
-         Constant minval = (fldtype == INTEGER) ?
-            new IntConstant(Integer.MIN_VALUE) :
-            new StringConstant("");
-         page.insertDir(0, minval, 0);
-		}
-      page.close();
+	   // deal with the directory
+	   Schema dirsch = new Schema();
+	   dirsch.add("block",   leafsch);
+	   dirsch.add("dataval", leafsch);
+	   String dirtbl = idxname + "dir";
+	   dirTi = new TableInfo(dirtbl, dirsch);
+	   rootblk = new Block(dirTi.fileName(), 0);
+	   if (tx.size(dirTi.fileName()) == 0)
+		   // create new root block
+		   tx.append(dirTi.fileName(), new BTPageFormatter(dirTi, 0));
+	   BTreePage page = new BTreePage(rootblk, dirTi, tx);
+	   if (page.getNumRecs() == 0) {
+		   // insert initial directory entry
+		   int fldtype = dirsch.type("dataval");
+		   Constant minval;
+		   if(fldtype == INTEGER)			   
+			   minval = new IntConstant(Integer.MIN_VALUE);
+		   else if(fldtype == DOUBLE)
+			   minval = new DoubleConstant(Double.MIN_VALUE);
+		   else
+			   minval = new StringConstant("");
+	       page.insertDir(0, minval, 0);
+	   }
+	   page.close();
    }
 
    /**
