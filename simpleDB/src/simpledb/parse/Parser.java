@@ -1,8 +1,15 @@
 package simpledb.parse;
 
 import java.util.*;
+
+import simpledb.metadata.MetadataMgr;
 import simpledb.query.*;
 import simpledb.record.Schema;
+import simpledb.record.TableInfo;
+import simpledb.server.SimpleDB;
+import simpledb.tx.Transaction;
+import static java.sql.Types.INTEGER;
+import static java.sql.Types.DOUBLE;
 
 /**
  * The SimpleDB parser.
@@ -32,11 +39,22 @@ public class Parser {
    public Constant constant() {
 	   if (lex.matchStringConstant())
 		   return new StringConstant(lex.eatStringConstant());
-	   else if(lex.matchIntConstant())
-		   return new IntConstant(lex.eatIntConstant());
+	   else if(lex.matchDoubleConstant())
+		   return new DoubleConstant(lex.eatDoubleConstant());	
 	   else
-		   return new DoubleConstant(lex.eatDoubleConstant());	       
+		   return new IntConstant(lex.eatIntConstant());
+	          
    }
+   
+   //Akif
+//   public Constant constant(int type) {
+//	   if (lex.matchStringConstant())
+//		   return new StringConstant(lex.eatStringConstant());
+//	   else if(type == INTEGER)
+//		   return new IntConstant(lex.eatIntConstant());
+//	   else
+//		   return new DoubleConstant(lex.eatDoubleConstant());	       
+//   }
    
    public Expression expression() {
       if (lex.matchId())
@@ -109,6 +127,18 @@ public class Parser {
          return create();
    }
    
+   //Akif
+//   public Object updateCmd(Transaction tx) {
+//	   if (lex.matchKeyword("insert"))
+//		   return insert(tx);//Bir tablonun schema bilgisini elde etmek icin tx parametresi gonderiliyor.
+//	   else if (lex.matchKeyword("delete"))
+//	       return delete();
+//	   else if (lex.matchKeyword("update"))
+//		   return modify();
+//	   else
+//	       return create();
+//   }
+   
    private Object create() {
       lex.eatKeyword("create");
       if (lex.matchKeyword("table"))
@@ -149,6 +179,26 @@ public class Parser {
       return new InsertData(tblname, flds, vals);
    }
    
+   //Akif
+//   public InsertData insert(Transaction tx) {
+//	   lex.eatKeyword("insert");
+//	   lex.eatKeyword("into");
+//	   String tblname = lex.eatId();
+//	   lex.eatDelim('(');
+//	   List<String> flds = fieldList();
+//	   lex.eatDelim(')');
+//	   lex.eatKeyword("values");
+//	   lex.eatDelim('(');
+//	   
+//	   MetadataMgr mdm = SimpleDB.mdMgr();
+//	   TableInfo tableInfo = mdm.getTableInfo(tblname, tx);
+//	   Schema sch = tableInfo.schema();
+//	   
+//	   List<Constant> vals = constList(sch, flds);
+//	   lex.eatDelim(')');
+//	   return new InsertData(tblname, flds, vals);
+//   }
+   
    private List<String> fieldList() {
       List<String> L = new ArrayList<String>();
       L.add(field());
@@ -168,6 +218,18 @@ public class Parser {
       }
       return L;
    }
+   
+   //Akif
+//   private List<Constant> constList(Schema sch, List<String> flds) {
+//	   List<Constant> L = new ArrayList<Constant>();
+//	   int fieldType = sch.type(flds.remove(0));
+//	   L.add(constant(fieldType));
+//	   if (lex.matchDelim(',')) {
+//		   lex.eatDelim(',');
+//	       L.addAll(constList(sch, flds));
+//	   }
+//	   return L;
+//   }
    
 // Method for parsing modify commands
    
