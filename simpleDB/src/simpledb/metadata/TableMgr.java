@@ -55,26 +55,64 @@ public class TableMgr {
     * @param sch the table's schema
     * @param tx the transaction creating the table
     */
+//   public void createTable(String tblname, Schema sch, Transaction tx) {
+//      TableInfo ti = new TableInfo(tblname, sch);
+//      // insert one record into tblcat
+//      RecordFile tcatfile = new RecordFile(tcatInfo, tx);
+//      tcatfile.insert();
+//      tcatfile.setString("tblname", tblname);
+//      tcatfile.setInt("reclength", ti.recordLength());
+//      tcatfile.close();
+//      
+//      // insert a record into fldcat for each field
+//      RecordFile fcatfile = new RecordFile(fcatInfo, tx);
+//      for (String fldname : sch.fields()) {
+//         fcatfile.insert();
+//         fcatfile.setString("tblname", tblname);
+//         fcatfile.setString("fldname", fldname);
+//         fcatfile.setInt   ("type",   sch.type(fldname));
+//         fcatfile.setInt   ("length", sch.length(fldname));
+//         fcatfile.setInt   ("offset", ti.offset(fldname));
+//      }
+//      fcatfile.close();
+//   }
+   
+   //Akif
    public void createTable(String tblname, Schema sch, Transaction tx) {
-      TableInfo ti = new TableInfo(tblname, sch);
-      // insert one record into tblcat
-      RecordFile tcatfile = new RecordFile(tcatInfo, tx);
-      tcatfile.insert();
-      tcatfile.setString("tblname", tblname);
-      tcatfile.setInt("reclength", ti.recordLength());
-      tcatfile.close();
-      
-      // insert a record into fldcat for each field
-      RecordFile fcatfile = new RecordFile(fcatInfo, tx);
-      for (String fldname : sch.fields()) {
-         fcatfile.insert();
-         fcatfile.setString("tblname", tblname);
-         fcatfile.setString("fldname", fldname);
-         fcatfile.setInt   ("type",   sch.type(fldname));
-         fcatfile.setInt   ("length", sch.length(fldname));
-         fcatfile.setInt   ("offset", ti.offset(fldname));
-      }
-      fcatfile.close();
+	   TableInfo ti = new TableInfo(tblname, sch);
+	   
+	   //Tablonun daha once oluturulup olusturlmadigina bakiliyor.
+	   boolean alreadyThereIs = false;   
+	   RecordFile tcatfile = new RecordFile(tcatInfo, tx); 
+	   while (tcatfile.next()) {
+	         if(tcatfile.getString("tblname").equals(tblname)) {
+	        	 alreadyThereIs = true;
+	        	 break;
+	         }
+	   }
+	   tcatfile.close();
+	   
+	   //Eklenmek istenen tablo daha once mevcut degilse
+	   if(alreadyThereIs == false) {
+		   // insert one record into tblcat
+		   tcatfile = new RecordFile(tcatInfo, tx);
+		   tcatfile.insert();
+		   tcatfile.setString("tblname", tblname);
+		   tcatfile.setInt("reclength", ti.recordLength());
+		   tcatfile.close();
+		      
+		   // insert a record into fldcat for each field
+		   RecordFile fcatfile = new RecordFile(fcatInfo, tx);
+		   for (String fldname : sch.fields()) {
+			   fcatfile.insert();
+		       fcatfile.setString("tblname", tblname);
+		       fcatfile.setString("fldname", fldname);
+		       fcatfile.setInt   ("type",   sch.type(fldname));
+		       fcatfile.setInt   ("length", sch.length(fldname));
+		       fcatfile.setInt   ("offset", ti.offset(fldname));
+		   }
+		   fcatfile.close();
+	   }	   
    }
    
    /**

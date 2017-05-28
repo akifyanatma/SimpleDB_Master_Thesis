@@ -56,7 +56,7 @@ class RecordFormatter implements PageFormatter {
 		   if (ti.schema().type(fldname) == INTEGER)
 			   page.setInt(pos + INT_SIZE + offset, 0);
 		   else if (ti.schema().type(fldname) == DOUBLE)
-			   page.setDouble(pos + DOUBLE_SIZE + offset, 0.0);
+			   page.setDouble(pos + INT_SIZE + offset, 0.0);
 	       else
 	    	   page.setString(pos + INT_SIZE + offset, "");
 	   }

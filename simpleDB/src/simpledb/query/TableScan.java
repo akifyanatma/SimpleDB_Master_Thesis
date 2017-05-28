@@ -103,7 +103,7 @@ public class TableScan implements UpdateScan {
    public void setVal(String fldname, Constant val) {
 	   if (sch.type(fldname) == INTEGER)
 		   rf.setInt(fldname, (Integer)val.asJavaVal());
-	   if (sch.type(fldname) == DOUBLE)
+	   else if (sch.type(fldname) == DOUBLE)
 		   rf.setDouble(fldname, (Double)val.asJavaVal());
 	   else
 	       rf.setString(fldname, (String)val.asJavaVal());
