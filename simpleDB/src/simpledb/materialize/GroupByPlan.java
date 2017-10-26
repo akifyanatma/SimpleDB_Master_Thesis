@@ -5,6 +5,8 @@ import simpledb.record.Schema;
 import simpledb.query.*;
 import java.util.*;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
  * The Plan class for the <i>groupby</i> operator.
  * @author Edward Sciore
@@ -14,6 +16,9 @@ public class GroupByPlan implements Plan {
    private Collection<String> groupfields;
    private Collection<AggregationFn> aggfns;
    private Schema sch = new Schema();
+   
+   //Akif
+   private DefaultMutableTreeNode node;
    
    /**
     * Creates a groupby plan for the underlying query.
@@ -26,16 +31,31 @@ public class GroupByPlan implements Plan {
     * @param aggfns the aggregation functions
     * @param tx the calling transaction
     */
+// public GroupByPlan(Plan p, Collection<String> groupfields, Collection<AggregationFn> aggfns, Transaction tx) {
+// List<String> grouplist = new ArrayList<String>();
+// grouplist.addAll(groupfields);
+// this.p = new SortPlan(p, grouplist, tx);
+// this.groupfields = groupfields;
+// this.aggfns = aggfns;
+// for (String fldname : groupfields)
+//    sch.add(fldname, p.schema());
+// for (AggregationFn fn : aggfns)
+//    sch.addIntField(fn.fieldName());
+//}
+
+   //Akif
    public GroupByPlan(Plan p, Collection<String> groupfields, Collection<AggregationFn> aggfns, Transaction tx) {
-      List<String> grouplist = new ArrayList<String>();
-      grouplist.addAll(groupfields);
-      this.p = new SortPlan(p, grouplist, tx);
-      this.groupfields = groupfields;
-      this.aggfns = aggfns;
-      for (String fldname : groupfields)
-         sch.add(fldname, p.schema());
-      for (AggregationFn fn : aggfns)
-         sch.addIntField(fn.fieldName());
+	  List<String> grouplist = new ArrayList<String>();
+	  grouplist.addAll(groupfields);
+	  this.p = new SortPlan(p, grouplist, tx);
+	  this.groupfields = groupfields;
+	  this.aggfns = aggfns;
+	  for (String fldname : groupfields)
+		   sch.add(fldname, p.schema());
+	  for (AggregationFn fn : aggfns)
+	      sch.addIntField(fn.fieldName());
+	  node = new DefaultMutableTreeNode("GroupBy");
+	  node.add(p.getTreeNode());
    }
    
    /**
@@ -98,5 +118,10 @@ public class GroupByPlan implements Plan {
     */
    public Schema schema() {
       return sch;
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

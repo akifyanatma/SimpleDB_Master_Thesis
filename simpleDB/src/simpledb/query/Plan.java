@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.record.Schema;
 
 /**
@@ -44,4 +46,8 @@ public interface Plan {
     * @return the query's schema
     */
    public Schema schema();
+   
+   //Akif
+   //Surgu agaci icin uretilen dugum dondurulur
+   public DefaultMutableTreeNode getTreeNode();
 }

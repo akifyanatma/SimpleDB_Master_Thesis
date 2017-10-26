@@ -4,6 +4,9 @@ import simpledb.tx.Transaction;
 import simpledb.record.Schema;
 import simpledb.metadata.IndexInfo;
 import simpledb.query.*;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.index.Index;
 
 /** The Plan class corresponding to the <i>indexselect</i>
@@ -15,6 +18,9 @@ public class IndexSelectPlan implements Plan {
    private IndexInfo ii;
    private Constant val;
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a new indexselect node in the query tree
     * for the specified index and selection constant.
@@ -23,10 +29,19 @@ public class IndexSelectPlan implements Plan {
     * @param val the selection constant
     * @param tx the calling transaction 
     */
+// public IndexSelectPlan(Plan p, IndexInfo ii, Constant val, Transaction tx) {
+// this.p = p;
+// this.ii = ii;
+// this.val = val;
+//}
+
+   //Akif
    public IndexSelectPlan(Plan p, IndexInfo ii, Constant val, Transaction tx) {
-      this.p = p;
-      this.ii = ii;
-      this.val = val;
+	  this.p = p;
+	  this.ii = ii;
+	  this.val = val;
+	  node = new DefaultMutableTreeNode("IndexSelectPlan");
+	  node.add(p.getTreeNode());
    }
    
    /** 
@@ -74,5 +89,10 @@ public class IndexSelectPlan implements Plan {
     */
    public Schema schema() {
       return p.schema(); 
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

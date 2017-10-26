@@ -1,6 +1,9 @@
 package simpledb.materialize;
 
 import static simpledb.file.Page.BLOCK_SIZE;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 import simpledb.query.*;
@@ -13,14 +16,25 @@ public class MaterializePlan implements Plan {
    private Plan srcplan;
    private Transaction tx;
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a materialize plan for the specified query.
     * @param srcplan the plan of the underlying query
     * @param tx the calling transaction
     */
+// public MaterializePlan(Plan srcplan, Transaction tx) {
+// this.srcplan = srcplan;
+// this.tx = tx;
+//}
+
+   //Akif
    public MaterializePlan(Plan srcplan, Transaction tx) {
-      this.srcplan = srcplan;
-      this.tx = tx;
+	  this.srcplan = srcplan;
+	  this.tx = tx;
+	  node = new DefaultMutableTreeNode("Materialize");
+	  node.add(srcplan.getTreeNode());
    }
    
    /**
@@ -83,5 +97,10 @@ public class MaterializePlan implements Plan {
     */
    public Schema schema() {
       return srcplan.schema();
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

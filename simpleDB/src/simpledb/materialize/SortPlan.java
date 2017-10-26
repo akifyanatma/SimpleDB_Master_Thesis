@@ -6,6 +6,8 @@ import simpledb.query.*;
 
 import java.util.*;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
  * The Plan class for the <i>sort</i> operator.
  * @author Edward Sciore
@@ -16,17 +18,31 @@ public class SortPlan implements Plan {
    private Schema sch;
    private RecordComparator comp;
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a sort plan for the specified query.
     * @param p the plan for the underlying query
     * @param sortfields the fields to sort by
     * @param tx the calling transaction
     */
+// public SortPlan(Plan p, List<String> sortfields, Transaction tx) {
+// this.p = p;
+// this.tx = tx;
+// sch = p.schema();
+// comp = new RecordComparator(sortfields);
+//}
+
+   //Akif
    public SortPlan(Plan p, List<String> sortfields, Transaction tx) {
-      this.p = p;
-      this.tx = tx;
-      sch = p.schema();
-      comp = new RecordComparator(sortfields);
+	  this.p = p;
+	  this.tx = tx;
+	  sch = p.schema();
+	  comp = new RecordComparator(sortfields);
+	  
+	  node = new DefaultMutableTreeNode("Sort");
+	  node.add(p.getTreeNode());
    }
    
    /**
@@ -149,5 +165,10 @@ public class SortPlan implements Plan {
       for (String fldname : sch.fields())
          dest.setVal(fldname, src.getVal(fldname));
       return src.next();
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

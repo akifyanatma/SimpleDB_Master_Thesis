@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.record.Schema;
 
 /** The Plan class corresponding to the <i>product</i>
@@ -10,17 +12,31 @@ public class ProductPlan implements Plan {
    private Plan p1, p2;
    private Schema schema = new Schema();
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a new product node in the query tree,
     * having the two specified subqueries.
     * @param p1 the left-hand subquery
     * @param p2 the right-hand subquery
     */
+// public ProductPlan(Plan p1, Plan p2) {
+// this.p1 = p1;
+// this.p2 = p2;
+// schema.addAll(p1.schema());
+// schema.addAll(p2.schema());
+//}
+
+   //Akif
    public ProductPlan(Plan p1, Plan p2) {
-      this.p1 = p1;
-      this.p2 = p2;
-      schema.addAll(p1.schema());
-      schema.addAll(p2.schema());
+	  this.p1 = p1;
+	  this.p2 = p2;
+	  schema.addAll(p1.schema());
+	  schema.addAll(p2.schema());
+	  node = new DefaultMutableTreeNode("Product");
+	  node.add(p1.getTreeNode());
+	  node.add(p2.getTreeNode());
    }
    
    /**
@@ -73,5 +89,10 @@ public class ProductPlan implements Plan {
     */
    public Schema schema() {
       return schema;
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

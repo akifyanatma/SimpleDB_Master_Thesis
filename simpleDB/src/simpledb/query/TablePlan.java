@@ -2,6 +2,9 @@ package simpledb.query;
 
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.metadata.*;
 import simpledb.record.*;
 
@@ -13,16 +16,27 @@ public class TablePlan implements Plan {
    private TableInfo ti;
    private StatInfo si;
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a leaf node in the query tree corresponding
     * to the specified table.
     * @param tblname the name of the table
     * @param tx the calling transaction
     */
+// public TablePlan(String tblname, Transaction tx) {
+// this.tx = tx;
+// ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
+// si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
+//}
+
+	//Akif
    public TablePlan(String tblname, Transaction tx) {
-      this.tx = tx;
-      ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
-      si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
+	  this.tx = tx;
+	  ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
+	  si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
+	  node = new DefaultMutableTreeNode(tblname.toUpperCase());
    }
    
    /**
@@ -67,5 +81,10 @@ public class TablePlan implements Plan {
     */
    public Schema schema() {
       return ti.schema();
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

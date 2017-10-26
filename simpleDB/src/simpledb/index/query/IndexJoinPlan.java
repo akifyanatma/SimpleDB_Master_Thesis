@@ -4,6 +4,9 @@ import simpledb.tx.Transaction;
 import simpledb.record.Schema;
 import simpledb.metadata.IndexInfo;
 import simpledb.query.*;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.index.Index;
 
 /** The Plan class corresponding to the <i>indexjoin</i>
@@ -16,6 +19,9 @@ public class IndexJoinPlan implements Plan {
    private String joinfield;
    private Schema sch = new Schema();
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Implements the join operator,
     * using the specified LHS and RHS plans.
@@ -25,13 +31,26 @@ public class IndexJoinPlan implements Plan {
     * @param joinfield the left-hand field used for joining
     * @param tx the calling transaction
     */
+// public IndexJoinPlan(Plan p1, Plan p2, IndexInfo ii, String joinfield, Transaction tx) {
+// this.p1 = p1;
+// this.p2 = p2;
+// this.ii = ii;
+// this.joinfield = joinfield;
+// sch.addAll(p1.schema());
+// sch.addAll(p2.schema());
+//}
+
+   //Akif
    public IndexJoinPlan(Plan p1, Plan p2, IndexInfo ii, String joinfield, Transaction tx) {
-      this.p1 = p1;
-      this.p2 = p2;
-      this.ii = ii;
-      this.joinfield = joinfield;
-      sch.addAll(p1.schema());
-      sch.addAll(p2.schema());
+	  this.p1 = p1;
+	  this.p2 = p2;
+	  this.ii = ii;
+	  this.joinfield = joinfield;
+	  sch.addAll(p1.schema());
+	  sch.addAll(p2.schema());
+	  node = new DefaultMutableTreeNode("IndexJoinPlan");
+	  node.add(p1.getTreeNode());
+	  node.add(p2.getTreeNode()); 
    }
    
    /**
@@ -87,5 +106,10 @@ public class IndexJoinPlan implements Plan {
     */
    public Schema schema() {
       return sch;
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

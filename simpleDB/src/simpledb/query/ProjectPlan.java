@@ -3,6 +3,8 @@ package simpledb.query;
 import simpledb.record.Schema;
 import java.util.Collection;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /** The Plan class corresponding to the <i>project</i>
   * relational algebra operator.
   * @author Edward Sciore
@@ -11,16 +13,34 @@ public class ProjectPlan implements Plan {
    private Plan p;
    private Schema schema = new Schema();
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a new project node in the query tree,
     * having the specified subquery and field list.
     * @param p the subquery
     * @param fieldlist the list of fields
     */
+// public ProjectPlan(Plan p, Collection<String> fieldlist) {
+// this.p = p;
+// for (String fldname : fieldlist)
+//    schema.add(fldname, p.schema());
+//}
+
+	//Akif
    public ProjectPlan(Plan p, Collection<String> fieldlist) {
-      this.p = p;
-      for (String fldname : fieldlist)
-         schema.add(fldname, p.schema());
+	  this.p = p;
+	  String allFieldString = "";
+	  for (String fldname : fieldlist){
+		   schema.add(fldname, p.schema());
+		   allFieldString+=fldname+", ";
+	  }
+	  if(allFieldString.length()>2)
+		   allFieldString = allFieldString.substring(0, allFieldString.length() - 2);
+	  
+	  node = new DefaultMutableTreeNode("Project: {"+allFieldString+"}");
+	  node.add(p.getTreeNode());
    }
    
    /**
@@ -67,5 +87,10 @@ public class ProjectPlan implements Plan {
     */
    public Schema schema() {
       return schema;
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

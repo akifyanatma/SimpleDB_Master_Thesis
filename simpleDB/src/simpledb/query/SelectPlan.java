@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.record.Schema;
 
 /** The Plan class corresponding to the <i>select</i>
@@ -10,15 +12,26 @@ public class SelectPlan implements Plan {
    private Plan p;
    private Predicate pred;
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a new select node in the query tree,
     * having the specified subquery and predicate.
     * @param p the subquery
     * @param pred the predicate
     */
+// public SelectPlan(Plan p, Predicate pred) {
+// this.p = p;
+// this.pred = pred;
+//}
+
+   	//Akif
    public SelectPlan(Plan p, Predicate pred) {
-      this.p = p;
-      this.pred = pred;
+	  this.p = p;
+	  this.pred = pred;
+	  node = new DefaultMutableTreeNode("Select: " + pred.toString());
+	  node.add(p.getTreeNode());
    }
    
    /**
@@ -80,5 +93,10 @@ public class SelectPlan implements Plan {
     */
    public Schema schema() {
       return p.schema();
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }

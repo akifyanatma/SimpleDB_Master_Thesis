@@ -3,6 +3,9 @@ package simpledb.multibuffer;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import simpledb.materialize.*;
 import simpledb.query.*;
 
@@ -16,18 +19,33 @@ public class MultiBufferProductPlan implements Plan {
    private Transaction tx;
    private Schema schema = new Schema();
    
+   //Akif
+   private DefaultMutableTreeNode node;
+   
    /**
     * Creates a product plan for the specified queries.
     * @param lhs the plan for the LHS query
     * @param rhs the plan for the RHS query
     * @param tx the calling transaction
     */
+// public MultiBufferProductPlan(Plan lhs, Plan rhs, Transaction tx) {
+// this.lhs = lhs;
+// this.rhs = rhs;
+// this.tx = tx;
+// schema.addAll(lhs.schema());
+// schema.addAll(rhs.schema());
+//}
+
+   //Akif
    public MultiBufferProductPlan(Plan lhs, Plan rhs, Transaction tx) {
-      this.lhs = lhs;
-      this.rhs = rhs;
-      this.tx = tx;
-      schema.addAll(lhs.schema());
-      schema.addAll(rhs.schema());
+	  this.lhs = lhs;
+	  this.rhs = rhs;
+	  this.tx = tx;
+	  schema.addAll(lhs.schema());
+	  schema.addAll(rhs.schema());
+	  node = new DefaultMutableTreeNode("Multi Buffer Product");
+	  node.add(lhs.getTreeNode());
+	  node.add(rhs.getTreeNode());
    }
    
    /**
@@ -112,5 +130,10 @@ public class MultiBufferProductPlan implements Plan {
       src.close();
       dest.close();
       return tt;
+   }
+   
+   //Akif
+   public DefaultMutableTreeNode getTreeNode(){
+	   return node;
    }
 }
