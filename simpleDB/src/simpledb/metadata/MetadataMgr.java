@@ -2,6 +2,8 @@ package simpledb.metadata;
 
 import simpledb.tx.Transaction;
 import simpledb.record.*;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MetadataMgr {
@@ -43,5 +45,15 @@ public class MetadataMgr {
    
    public StatInfo getStatInfo(String tblname, TableInfo ti, Transaction tx) {
       return statmgr.getStatInfo(tblname, ti, tx);
+   }
+   
+   //Akif
+   public void setDistinctValue(String tableName, String fldName, int distinctValue, TableInfo ti, Transaction tx){
+	   statmgr.setDistinctValue(tableName, fldName, distinctValue, ti, tx);
+   }
+   
+   //Akif
+   public ArrayList<TableInfo> getAllTableInfo(Transaction tx){
+	  return tblmgr.getAllTableInfo(tx);
    }
 }

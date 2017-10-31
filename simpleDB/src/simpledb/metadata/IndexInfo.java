@@ -115,6 +115,7 @@ public class IndexInfo {
 //      return sch;
 //   }
    
+   //Akif
    private Schema schema() {
 	   Schema sch = new Schema();
 	   sch.addIntField("block");

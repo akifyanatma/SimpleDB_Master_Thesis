@@ -35,8 +35,8 @@ public class ProductPlan implements Plan {
 	  schema.addAll(p1.schema());
 	  schema.addAll(p2.schema());
 	  node = new DefaultMutableTreeNode("Product");
-	  node.add(p1.getTreeNode());
 	  node.add(p2.getTreeNode());
+	  node.add(p1.getTreeNode());	  
    }
    
    /**

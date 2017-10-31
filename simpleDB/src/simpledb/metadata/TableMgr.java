@@ -147,4 +147,34 @@ public class TableMgr {
       fcatfile.close();
       return new TableInfo(tblname, sch, offsets, reclen);
    }
+   
+   //Akif
+   public ArrayList<TableInfo> getAllTableInfo(Transaction tx){	   
+	   ArrayList<TableInfo> tableInfos = new ArrayList<>();
+	   RecordFile tcatfile = new RecordFile(tcatInfo, tx);
+	   int reclen = -1;
+	   String tableName = "";
+
+	   while(tcatfile.next()){
+		   tableName = tcatfile.getString("tblname");
+		   reclen = tcatfile.getInt("reclength");
+		   		   
+		   RecordFile fcatfile = new RecordFile(fcatInfo, tx);
+		   Schema sch = new Schema();
+		   Map<String,Integer> offsets = new HashMap<String,Integer>();
+		   while (fcatfile.next())
+			   if (fcatfile.getString("tblname").equals(tableName)) {
+				   String fldname = fcatfile.getString("fldname");
+				   int fldtype    = fcatfile.getInt("type");
+				   int fldlen     = fcatfile.getInt("length");
+				   int offset     = fcatfile.getInt("offset");
+				   offsets.put(fldname, offset);
+				   sch.addField(fldname, fldtype, fldlen);
+			   }
+		   fcatfile.close();
+		   tableInfos.add(new TableInfo(tableName, sch, offsets, reclen));	   
+	   }
+	   	   
+	   return tableInfos;	   
+   }
 }

@@ -84,6 +84,7 @@ public class GUI {
 	private DefaultTableModel viewTableModel;
 	private DefaultTableModel tblCatModel;
 	private DefaultTableModel fldCatModel;
+	private DefaultTableModel statModel;
 	
 	private JScrollPane queryResultTableScrollPane;
 	private JScrollPane queryTreeScrollPane;
@@ -128,6 +129,7 @@ public class GUI {
 	private JTable viewTable;
 	private JTable tblCatTable;
 	private JTable fldCatTable;
+	private JTable statisticTable;
 	
 
 	/**
@@ -249,6 +251,7 @@ public class GUI {
 		statisticMetaDataMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisiblePanel(statisticMetaDataPanel);
+				getStatisticMetadata();
 			}
 		});
 		metaDataMenu.add(statisticMetaDataMenuItem);
@@ -674,13 +677,33 @@ public class GUI {
 		statisticMetaDataPanel = new JPanel();
 		frame.getContentPane().add(statisticMetaDataPanel, "name_1071783750247772");
 		panels.add(statisticMetaDataPanel);
+		statisticMetaDataPanel.setLayout(null);
+		
+		JLabel statisticMetaDataLabel = new JLabel("Statistics");
+		statisticMetaDataLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		statisticMetaDataLabel.setBounds(20, 25, 115, 24);
+		statisticMetaDataPanel.add(statisticMetaDataLabel);
+		
+		statModel = new DefaultTableModel();
+		statModel.addColumn("T");
+		statModel.addColumn("B(T)");
+		statModel.addColumn("R(T)");
+		statModel.addColumn("V(T, F)");
+		
+		statisticTable = new JTable(statModel);
+		statisticTable.setBounds(0, 0, 1, 1);
+		statisticMetaDataPanel.add(statisticTable);
+		
+		JScrollPane statisticMetaDataScrollPane = new JScrollPane(statisticTable);
+		statisticMetaDataScrollPane.setBounds(20, 60, 964, 617);
+		statisticMetaDataPanel.add(statisticMetaDataScrollPane);
 	}
 	
 	private void initializeExDbLoadPanel(){		
 		exDbPanel = new JPanel(){
 	        @Override
 	        public Dimension getPreferredSize() {
-	            return new Dimension(980, 1040);
+	            return new Dimension(980, 860);
 	        }
 	    };
 		frame.getContentPane().add(exDbPanel, "name_983354196760041");
@@ -691,182 +714,182 @@ public class GUI {
 		exDbPanel.setLayout(null);
 				
 		JLabel exDbTableNameLabel_1 = new JLabel("Table Name:");
-		exDbTableNameLabel_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_1.setBounds(117, 22, 89, 24);
 		exDbTableNameLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_1);
 		
 		JLabel exDbTableNameLabel_2 = new JLabel("Table Name:");
-		exDbTableNameLabel_2.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_2.setBounds(117, 188, 89, 24);
 		exDbTableNameLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_2);
 		
 		JLabel exDbTableNameLabel_3 = new JLabel("Table Name:");
-		exDbTableNameLabel_3.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_3.setBounds(117, 358, 89, 24);
 		exDbTableNameLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_3);
 		
 		JLabel exDbTableNameLabel_4 = new JLabel("Table Name:");
-		exDbTableNameLabel_4.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_4.setBounds(117, 524, 89, 24);
 		exDbTableNameLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_4);
 		
 		JLabel exDbTableNameLabel_5 = new JLabel("Table Name:");
-		exDbTableNameLabel_5.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_5.setBounds(117, 696, 89, 24);
 		exDbTableNameLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_5);
 		
 		JLabel exDbTableNameLabel_1_1 = new JLabel("student");
-		exDbTableNameLabel_1_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_1_1.setBounds(198, 22, 89, 24);
 		exDbTableNameLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_1_1);
 		
 		JLabel exDbTableNameLabel_2_1 = new JLabel("dept");
-		exDbTableNameLabel_2_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_2_1.setBounds(198, 188, 89, 24);
 		exDbTableNameLabel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_2_1);
 		
 		JLabel exDbTableNameLabel_3_1 = new JLabel("course");
-		exDbTableNameLabel_3_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_3_1.setBounds(198, 358, 89, 24);
 		exDbTableNameLabel_3_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_3_1);
 		
 		JLabel exDbTableNameLabel_4_1 = new JLabel("section");
-		exDbTableNameLabel_4_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_4_1.setBounds(198, 524, 89, 24);
 		exDbTableNameLabel_4_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_4_1);
 		
 		JLabel exDbTableNameLabel_5_1 = new JLabel("enroll");
-		exDbTableNameLabel_5_1.setBounds(0, 0, 89, 24);
+		exDbTableNameLabel_5_1.setBounds(198, 696, 89, 24);
 		exDbTableNameLabel_5_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbTableNameLabel_5_1);
 		
 		JLabel exDbRecordCountLabel_1 = new JLabel("Record Count:");
-		exDbRecordCountLabel_1.setBounds(0, 0, 103, 24);
+		exDbRecordCountLabel_1.setBounds(374, 22, 103, 24);
 		exDbRecordCountLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbRecordCountLabel_1);
 		
 		JLabel exDbRecordCountLabel_2 = new JLabel("Record Count:");
-		exDbRecordCountLabel_2.setBounds(0, 0, 103, 24);
+		exDbRecordCountLabel_2.setBounds(374, 188, 103, 24);
 		exDbRecordCountLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbRecordCountLabel_2);
 		
 		JLabel exDbRecordCountLabel_3 = new JLabel("Record Count:");
-		exDbRecordCountLabel_3.setBounds(0, 0, 103, 24);
+		exDbRecordCountLabel_3.setBounds(374, 358, 103, 24);
 		exDbRecordCountLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbRecordCountLabel_3);
 		
 		JLabel exDbRecordCountLabel_4 = new JLabel("Record Count:");
-		exDbRecordCountLabel_4.setBounds(0, 0, 103, 24);
+		exDbRecordCountLabel_4.setBounds(374, 524, 103, 24);
 		exDbRecordCountLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbRecordCountLabel_4);
 		
 		JLabel exDbRecordCountLabel_5 = new JLabel("Record Count:");
-		exDbRecordCountLabel_5.setBounds(0, 0, 103, 24);
+		exDbRecordCountLabel_5.setBounds(374, 696, 103, 24);
 		exDbRecordCountLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbRecordCountLabel_5);
 		
 		JLabel exDbMinValLabel_1 = new JLabel("Min Value");
-		exDbMinValLabel_1.setBounds(0, 0, 103, 24);
+		exDbMinValLabel_1.setBounds(20, 68, 91, 24);
 		exDbMinValLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMinValLabel_1);
 		
 		JLabel exDbMinValLabel_2 = new JLabel("Min Value");
-		exDbMinValLabel_2.setBounds(0, 0, 103, 24);
+		exDbMinValLabel_2.setBounds(20, 231, 91, 24);
 		exDbMinValLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMinValLabel_2);
 		
 		JLabel exDbMinValLabel_3 = new JLabel("Min Value");
-		exDbMinValLabel_3.setBounds(0, 0, 103, 24);
+		exDbMinValLabel_3.setBounds(20, 397, 91, 24);
 		exDbMinValLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMinValLabel_3);
 		
 		JLabel exDbMinValLabel_4 = new JLabel("Min Value");
-		exDbMinValLabel_4.setBounds(0, 0, 103, 24);
+		exDbMinValLabel_4.setBounds(20, 565, 91, 24);
 		exDbMinValLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMinValLabel_4);
 		
 		JLabel exDbMinValLabel_5 = new JLabel("Min Value");
-		exDbMinValLabel_5.setBounds(0, 0, 103, 24);
+		exDbMinValLabel_5.setBounds(20, 740, 91, 24);
 		exDbMinValLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMinValLabel_5);
 		
 		JLabel exDbMaxValLabel_1 = new JLabel("Max Value");
-		exDbMaxValLabel_1.setBounds(0, 0, 103, 24);
+		exDbMaxValLabel_1.setBounds(20, 89, 91, 24);
 		exDbMaxValLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMaxValLabel_1);
 		
 		JLabel exDbMaxValLabel_2 = new JLabel("Max Value");
-		exDbMaxValLabel_2.setBounds(0, 0, 103, 24);
+		exDbMaxValLabel_2.setBounds(20, 254, 91, 24);
 		exDbMaxValLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMaxValLabel_2);
 		
 		JLabel exDbMaxValLabel_3 = new JLabel("Max Value");
-		exDbMaxValLabel_3.setBounds(0, 0, 103, 24);
+		exDbMaxValLabel_3.setBounds(20, 418, 91, 24);
 		exDbMaxValLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMaxValLabel_3);
 		
 		JLabel exDbMaxValLabel_4 = new JLabel("Max Value");
-		exDbMaxValLabel_4.setBounds(0, 0, 103, 24);
+		exDbMaxValLabel_4.setBounds(20, 587, 91, 24);
 		exDbMaxValLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMaxValLabel_4);
 		
 		JLabel exDbMaxValLabel_5 = new JLabel("Max Value");
-		exDbMaxValLabel_5.setBounds(0, 0, 103, 24);
+		exDbMaxValLabel_5.setBounds(20, 763, 91, 24);
 		exDbMaxValLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbMaxValLabel_5);
 		
 		JLabel exDbDistValLabel_1 = new JLabel("Distinct Value");
-		exDbDistValLabel_1.setBounds(0, 0, 103, 24);
+		exDbDistValLabel_1.setBounds(20, 109, 91, 24);
 		exDbDistValLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbDistValLabel_1);
 		
 		JLabel exDbDistValLabel_2 = new JLabel("Distinct Value");
-		exDbDistValLabel_2.setBounds(0, 0, 103, 24);
+		exDbDistValLabel_2.setBounds(20, 276, 91, 24);
 		exDbDistValLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbDistValLabel_2);
 		
 		JLabel exDbDistValLabel_3 = new JLabel("Distinct Value");
-		exDbDistValLabel_3.setBounds(0, 0, 103, 24);
+		exDbDistValLabel_3.setBounds(20, 442, 91, 24);
 		exDbDistValLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbDistValLabel_3);
 		
 		JLabel exDbDistValLabel_4 = new JLabel("Distinct Value");
-		exDbDistValLabel_4.setBounds(0, 0, 103, 24);
+		exDbDistValLabel_4.setBounds(20, 610, 91, 24);
 		exDbDistValLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbDistValLabel_4);
 		
 		JLabel exDbDistValLabel_5 = new JLabel("Distinct Value");
-		exDbDistValLabel_5.setBounds(0, 0, 103, 24);
+		exDbDistValLabel_5.setBounds(20, 786, 91, 24);
 		exDbDistValLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbDistValLabel_5);
 		
 		exDbWarningLabel_1 = new JLabel("Warning!");
-		exDbWarningLabel_1.setBounds(0, 0, 716, 24);
+		exDbWarningLabel_1.setBounds(117, 140, 716, 24);
 		exDbWarningLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbWarningLabel_1);
 		
 		exDbWarningLabel_2 = new JLabel("Warning!");
-		exDbWarningLabel_2.setBounds(0, 0, 716, 24);
+		exDbWarningLabel_2.setBounds(117, 306, 716, 24);
 		exDbWarningLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbWarningLabel_2);
 		
 		exDbWarningLabel_3 = new JLabel("Warning!");
-		exDbWarningLabel_3.setBounds(0, 0, 716, 24);
+		exDbWarningLabel_3.setBounds(117, 475, 716, 24);
 		exDbWarningLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbWarningLabel_3);
 		
 		exDbWarningLabel_4 = new JLabel("Warning!");
-		exDbWarningLabel_4.setBounds(0, 0, 716, 24);
+		exDbWarningLabel_4.setBounds(117, 643, 716, 24);
 		exDbWarningLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbWarningLabel_4);
 		
 		exDbWarningLabel_5 = new JLabel("Warning!");
-		exDbWarningLabel_5.setBounds(0, 0, 716, 24);
+		exDbWarningLabel_5.setBounds(117, 817, 716, 24);
 		exDbWarningLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbWarningLabel_5);
 		
 		exDbRecCountTextField_1 = new JTextField();
-		exDbRecCountTextField_1.setBounds(0, 0, 89, 24);
+		exDbRecCountTextField_1.setBounds(459, 22, 89, 24);
 		exDbRecCountTextField_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbRecCountTextField_1.setColumns(10);
 		exDbPanel.add(exDbRecCountTextField_1);
@@ -882,7 +905,7 @@ public class GUI {
 		});
 		
 		exDbRecCountTextField_2 = new JTextField();
-		exDbRecCountTextField_2.setBounds(0, 0, 89, 24);
+		exDbRecCountTextField_2.setBounds(459, 189, 89, 24);
 		exDbRecCountTextField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbRecCountTextField_2.setColumns(10);
 		exDbPanel.add(exDbRecCountTextField_2);
@@ -898,7 +921,7 @@ public class GUI {
 		});
 		
 		exDbRecCountTextField_3 = new JTextField();
-		exDbRecCountTextField_3.setBounds(0, 0, 89, 24);
+		exDbRecCountTextField_3.setBounds(459, 359, 89, 24);
 		exDbRecCountTextField_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbRecCountTextField_3.setColumns(10);
 		exDbPanel.add(exDbRecCountTextField_3);
@@ -914,7 +937,7 @@ public class GUI {
 		});
 		
 		exDbRecCountTextField_4 = new JTextField();
-		exDbRecCountTextField_4.setBounds(0, 0, 89, 24);
+		exDbRecCountTextField_4.setBounds(459, 525, 89, 24);
 		exDbRecCountTextField_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbRecCountTextField_4.setColumns(10);
 		exDbPanel.add(exDbRecCountTextField_4);
@@ -930,7 +953,7 @@ public class GUI {
 		});
 		
 		exDbRecCountTextField_5 = new JTextField();
-		exDbRecCountTextField_5.setBounds(0, 0, 89, 24);
+		exDbRecCountTextField_5.setBounds(459, 697, 89, 24);
 		exDbRecCountTextField_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbRecCountTextField_5.setColumns(10);
 		exDbPanel.add(exDbRecCountTextField_5);
@@ -981,32 +1004,32 @@ public class GUI {
 		exDbPanel.add(exDbTable_5);
 		
 		JScrollPane exDbScrollPane_1 = new JScrollPane(exDbTable_1);
-		exDbScrollPane_1.setBounds(0, 0, 873, 83);
+		exDbScrollPane_1.setBounds(107, 50, 875, 83);
 		exDbScrollPane_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbScrollPane_1);
 		
 		JScrollPane exDbScrollPane_2 = new JScrollPane(exDbTable_2);
-		exDbScrollPane_2.setBounds(0, 0, 873, 83);
+		exDbScrollPane_2.setBounds(107, 217, 873, 83);
 		exDbScrollPane_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbScrollPane_2);
 		
 		JScrollPane exDbScrollPane_3 = new JScrollPane(exDbTable_3);
-		exDbScrollPane_3.setBounds(0, 0, 873, 83);
+		exDbScrollPane_3.setBounds(107, 387, 873, 83);
 		exDbScrollPane_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbScrollPane_3);
 		
 		JScrollPane exDbScrollPane_4 = new JScrollPane(exDbTable_4);
-		exDbScrollPane_4.setBounds(0, 0, 873, 83);
+		exDbScrollPane_4.setBounds(107, 554, 873, 83);
 		exDbScrollPane_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbScrollPane_4);
 		
 		JScrollPane exDbScrollPane_5 = new JScrollPane(exDbTable_5);
-		exDbScrollPane_5.setBounds(0, 0, 873, 83);
+		exDbScrollPane_5.setBounds(107, 727, 873, 83);
 		exDbScrollPane_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		exDbPanel.add(exDbScrollPane_5);
 			
 		JButton exDbLoadButton_1 = new JButton("Load");
-		exDbLoadButton_1.setBounds(0, 0, 89, 24);
+		exDbLoadButton_1.setBounds(893, 140, 89, 24);
 		exDbLoadButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String recordCountText = exDbRecCountTextField_1.getText();
@@ -1030,7 +1053,7 @@ public class GUI {
 		exDbPanel.add(exDbLoadButton_1);
 		
 		JButton exDbLoadButton_2 = new JButton("Load");
-		exDbLoadButton_2.setBounds(0, 0, 89, 24);
+		exDbLoadButton_2.setBounds(893, 306, 89, 24);
 		exDbLoadButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String recordCountText = exDbRecCountTextField_2.getText();
@@ -1054,7 +1077,7 @@ public class GUI {
 		exDbPanel.add(exDbLoadButton_2);
 		
 		JButton exDbLoadButton_3 = new JButton("Load");
-		exDbLoadButton_3.setBounds(0, 0, 89, 24);
+		exDbLoadButton_3.setBounds(893, 475, 89, 24);
 		exDbLoadButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String recordCountText = exDbRecCountTextField_3.getText();
@@ -1078,7 +1101,7 @@ public class GUI {
 		exDbPanel.add(exDbLoadButton_3);
 		
 		JButton exDbLoadButton_4 = new JButton("Load");
-		exDbLoadButton_4.setBounds(0, 0, 89, 24);
+		exDbLoadButton_4.setBounds(893, 643, 89, 24);
 		exDbLoadButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String recordCountText = exDbRecCountTextField_4.getText();
@@ -1102,7 +1125,7 @@ public class GUI {
 		exDbPanel.add(exDbLoadButton_4);
 		
 		JButton exDbLoadButton_5 = new JButton("Load");
-		exDbLoadButton_5.setBounds(0, 0, 89, 24);
+		exDbLoadButton_5.setBounds(893, 817, 89, 24);
 		exDbLoadButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String recordCountText = exDbRecCountTextField_5.getText();
@@ -1127,28 +1150,57 @@ public class GUI {
 	}
 	
 	private void getTableMetadata() {
-//		tblCatModel.setRowCount(0);
-//		fldCatModel.setRowCount(0);
-//		
-//		Transaction tx = new Transaction();
-//		ArrayList<TableInfo> tableInfos = SimpleDB.mdMgr().getAllTableInfo(tx);		
-//		
-//		for(int i=0; i<tableInfos.size();i++){
-//			TableInfo ti = tableInfos.get(i);
-//			String tblName = ti.fileName();
-//			int recLength = ti.recordLength();
-//			tblCatModel.addRow(new Object[]{tblName, recLength});
-//			
-//			Schema sch = ti.schema();
-//			for (String fld : sch.fields()) {
-//				int type = sch.type(fld);
-//				int lenght = sch.length(fld);
-//				int offset = ti.offset(fld);
-//				fldCatModel.addRow(new Object[]{tblName, fld, type, lenght, offset});
-//			}
-//		}
-//		
-//		tx.commit();
+		tblCatModel.setRowCount(0);
+		fldCatModel.setRowCount(0);
+		
+		Transaction tx = new Transaction();
+		ArrayList<TableInfo> tableInfos = SimpleDB.mdMgr().getAllTableInfo(tx);		
+		
+		for(int i=0; i<tableInfos.size();i++){
+			TableInfo ti = tableInfos.get(i);
+			String tblName = ti.fileName();
+			int recLength = ti.recordLength();
+			tblCatModel.addRow(new Object[]{tblName, recLength});
+			
+			Schema sch = ti.schema();
+			for (String fld : sch.fields()) {
+				int type = sch.type(fld);
+				int lenght = sch.length(fld);
+				int offset = ti.offset(fld);
+				fldCatModel.addRow(new Object[]{tblName, fld, type, lenght, offset});
+			}
+		}
+		
+		tx.commit();
+	}
+	
+	private void getStatisticMetadata(){
+		statModel.setRowCount(0);
+						
+		Transaction tx = new Transaction();
+		ArrayList<TableInfo> tableInfos = SimpleDB.mdMgr().getAllTableInfo(tx);	
+		
+		for(int i=0; i<tableInfos.size();i++){
+			TableInfo ti = tableInfos.get(i);
+			String tblName = ti.fileName();
+			Schema sch = ti.schema();
+			int B = SimpleDB.mdMgr().getStatInfo(tblName, ti, tx).blocksAccessed();
+			int R = SimpleDB.mdMgr().getStatInfo(tblName, ti, tx).recordsOutput();
+			
+			ArrayList<String> distinctValues = new ArrayList<>();
+			for (String fld : sch.fields()) {
+				int distinctValue = SimpleDB.mdMgr().getStatInfo(tblName, ti, tx).distinctValues(fld);
+				distinctValues.add(String.valueOf(distinctValue) + "     for "+fld);
+			}
+			
+			statModel.addRow(new Object[]{tblName, B, R, distinctValues.get(0)});
+			for(int j=1; j<distinctValues.size();j++){
+				statModel.addRow(new Object[]{"", "","", distinctValues.get(j)});
+			}
+			
+		}
+			
+		tx.commit();
 	}
 	
 	//Bir tablonun kayitlarindaki field degerleri uretilir.
@@ -1225,9 +1277,9 @@ public class GUI {
 		Schema sch = ti.schema();
 		
 		for(int i=0; i<tableModel.getColumnCount();i++){
-			String fld = tableModel.getColumnName(i);
+			String fldName = tableModel.getColumnName(i);
 			int distinctValue = Integer.valueOf((String)tableModel.getValueAt(2, i));
-			//Buralar dolduralacakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+			SimpleDB.mdMgr().setDistinctValue(tableName+".tbl", fldName, distinctValue, ti, tx);
 		}
 	}
 	
@@ -1403,9 +1455,7 @@ public class GUI {
 			}
 			
 			viewTableModel.addRow(rowData);
-		}
-		System.out.println("getTableRecords fonksiyonu icindeyimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
-		
+		}	
 		tx.commit();
 	}
 	
