@@ -30,7 +30,7 @@ public class SimpleDB {
    private static BufferMgr   bm;
    private static LogMgr      logm;
    private static MetadataMgr mdm;
-   
+      
    /**
     * Initializes the system.
     * This method is called during system startup.

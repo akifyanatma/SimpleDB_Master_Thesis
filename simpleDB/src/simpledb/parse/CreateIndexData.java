@@ -1,5 +1,7 @@
 package simpledb.parse;
 
+import simpledb.server.SimpleDB;
+
 /**
  * The parser for the <i>create index</i> statement.
  * @author Edward Sciore
@@ -11,7 +13,7 @@ public class CreateIndexData {
     * Saves the table and field names of the specified index.
     */
    public CreateIndexData(String idxname, String tblname, String fldname) {
-      this.idxname = idxname;
+      this.idxname = idxname; 
       this.tblname = tblname;
       this.fldname = fldname;
    }

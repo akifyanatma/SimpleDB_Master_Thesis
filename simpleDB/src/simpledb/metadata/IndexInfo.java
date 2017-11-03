@@ -23,6 +23,8 @@ public class IndexInfo {
    private Transaction tx;
    private TableInfo ti;
    private StatInfo si;
+   //Akif
+   private String idxtype;
    
    /**
     * Creates an IndexInfo object for the specified index.
@@ -38,6 +40,18 @@ public class IndexInfo {
       this.tx = tx;
       ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
       si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
+   }
+   
+   //Akif
+   //Overloaded
+   public IndexInfo(String idxname, String tblname, String fldname,
+                    String idxtype, Transaction tx) {
+	   this.idxname = idxname;
+	   this.fldname = fldname;
+	   this.idxtype = idxtype;
+	   this.tx = tx;
+	   ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
+	   si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
    }
    
    /**
@@ -112,5 +126,10 @@ public class IndexInfo {
          sch.addStringField("dataval", fldlen);
       }
       return sch;
+   }
+   
+   //Akif
+   public String getType() {
+	   return idxtype;
    }
 }
