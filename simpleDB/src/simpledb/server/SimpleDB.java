@@ -30,6 +30,12 @@ public class SimpleDB {
    private static BufferMgr   bm;
    private static LogMgr      logm;
    private static MetadataMgr mdm;
+   
+   //Akif
+   public enum PlannerType {
+	   BASIC,
+	   HEURISTIC6a;
+   }
       
    /**
     * Initializes the system.
@@ -99,9 +105,18 @@ public class SimpleDB {
     * Creates a planner for SQL commands.
     * To change how the planner works, modify this method.
     * @return the system's planner for SQL commands
-    */public static Planner planner() {
+    */
+   public static Planner planner() {
       QueryPlanner  qplanner = new BasicQueryPlanner();
       UpdatePlanner uplanner = new BasicUpdatePlanner();
       return new Planner(qplanner, uplanner);
+   }
+   
+   //Akif
+   //Overloaded
+   public static Planner planner(PlannerType type) {
+	   QueryPlanner  qplanner = new BasicQueryPlanner();
+	   UpdatePlanner uplanner = new BasicUpdatePlanner();
+	   return new Planner(qplanner, uplanner);
    }
 }

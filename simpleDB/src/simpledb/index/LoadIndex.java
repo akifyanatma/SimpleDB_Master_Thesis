@@ -18,17 +18,25 @@ import simpledb.metadata.IndexInfo;
 public class LoadIndex {
 	
 	public static int loadIndex(String tblname, String fldname, String idxname, String idxtype, Transaction tx){	
-		
-		//ayni tipte index daha onceden varsa index ekleme islemi yapilamasin ve fonksiyon sifir donsun.
-		ArrayList<IndexInfo> indexInfoList = SimpleDB.mdMgr().getIndexInfo_(tblname, tx).get(fldname);		 
-		for(IndexInfo ii : indexInfoList) {
-			if(ii.getType().equals(idxtype))
-				return 0;
+		Map<String, ArrayList<IndexInfo>> indexInfoMap = SimpleDB.mdMgr().getIndexInfo_(tblname, tx);
+		ArrayList<IndexInfo> indexInfoList = null;
+		if(indexInfoMap.containsKey(fldname) == true) {
+			indexInfoList = indexInfoMap.get(fldname);
+			
+			if(indexInfoList.size() != 0) {	
+				//ayni tipte index daha onceden varsa index ekleme islemi yapilamasin ve fonksiyon sifir donsun.
+				for(IndexInfo ii : indexInfoList) {
+					if(ii.getType().equals(idxtype))
+						return 0;
+				}
+			}
 		}
-		
-		
-		
+								
 		TableInfo ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
+		if(ti == null) {
+			System.out.println("There is not \""+tblname+"\" in database.");
+			return 0;
+		}
 		
 		Schema idxsch = new Schema();
 	    if (ti.schema().type(fldname) == INTEGER)
@@ -46,14 +54,15 @@ public class LoadIndex {
 		else if (idxtype.equalsIgnoreCase("shash"))
 			idx = new HashIndex(idxname, idxsch, tx);
 		
+		if(idx == null)
+			return 0;
 		
 		UpdateScan s = new TableScan(ti, tx);
 		System.out.println("loading " + idxname + "...");
 		while (s.next()) {
 			idx.insert(s.getVal(fldname), s.getRid());
 		}
-		
-		
+			
 		SimpleDB.mdMgr().createIndex(idxname, tblname, fldname, idxtype, tx);
 		
 		return 1;

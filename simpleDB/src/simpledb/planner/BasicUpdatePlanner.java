@@ -3,6 +3,7 @@ package simpledb.planner;
 import java.util.Iterator;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
+import simpledb.index.LoadIndex;
 import simpledb.parse.*;
 import simpledb.query.*;
 
@@ -62,8 +63,14 @@ public class BasicUpdatePlanner implements UpdatePlanner {
       return 0;
    }
    
-   public int executeCreateIndex(CreateIndexData data, Transaction tx) {
-      SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
-      return 0;  
+//   public int executeCreateIndex(CreateIndexData data, Transaction tx) {
+//      SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
+//      return 0;  
+//   }
+   
+   //Akif
+   public int executeCreateIndex(CreateIndexData data, Transaction tx) { 
+	   return LoadIndex.loadIndex(data.tableName(), data.fieldName(), data.indexName(),
+			   data.indexType(), tx);
    }
 }

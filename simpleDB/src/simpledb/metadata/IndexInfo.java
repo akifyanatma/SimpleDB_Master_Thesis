@@ -58,10 +58,22 @@ public class IndexInfo {
     * Opens the index described by this object.
     * @return the Index object associated with this information
     */
+//   public Index open() {
+//      Schema sch = schema();
+//      // Create new HashIndex for hash indexing
+//      return new HashIndex(idxname, sch, tx);
+//   }
+   
+   //Akif
    public Index open() {
-      Schema sch = schema();
-      // Create new HashIndex for hash indexing
-      return new HashIndex(idxname, sch, tx);
+	   Schema sch = schema();
+	   // Create new HashIndex for hash indexing
+	   if (idxtype.equalsIgnoreCase("btree"))
+		   return new BTreeIndex(idxname, sch, tx);
+	   else if (idxtype.equalsIgnoreCase("shash"))
+		   return new HashIndex(idxname, sch, tx);
+	   
+	   return null;
    }
    
    /**

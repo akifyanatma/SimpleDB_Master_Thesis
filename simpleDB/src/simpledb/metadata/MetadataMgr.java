@@ -58,4 +58,18 @@ public class MetadataMgr {
    public StatInfo getStatInfo(String tblname, TableInfo ti, Transaction tx) {
       return statmgr.getStatInfo(tblname, ti, tx);
    }
+   
+   //Akif
+   //Sadece bir tane field icin distinct value set edilir
+   public void setDistinctValue(String tableName, String fldName, int distinctValue, TableInfo ti, Transaction tx){
+	   statmgr.setDistinctValue(tableName, fldName, distinctValue, ti, tx);
+   }
+   
+   //Akif
+   //Tablodaki butun fieldlar icin distinct valuelar set edilir
+   public void setStatInfo(String tableName,TableInfo ti, Map<String,Integer> fieldStats, Transaction tx ) {
+		for (String field : fieldStats.keySet()) {
+			statmgr.setDistinctValue(tableName, field, fieldStats.get(field), ti, tx);
+		}
+   }
 }

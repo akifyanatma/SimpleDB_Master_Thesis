@@ -37,7 +37,7 @@ public class IndexMgr {
    public IndexMgr(boolean isnew, TableMgr tblmgr, Transaction tx) {
 	   if (isnew) {
 		   Schema sch = new Schema();
-	       sch.addStringField("indexname", MAX_NAME);
+	       sch.addStringField("indexname", 32);
 	       sch.addStringField("tablename", MAX_NAME);
 	       sch.addStringField("fieldname", MAX_NAME);
 	       sch.addStringField("indextype", MAX_NAME);
@@ -105,7 +105,7 @@ public class IndexMgr {
 		   if (rf.getString("tablename").equals(tblname)) {
 	       String idxname = rf.getString("indexname");
 	       String fldname = rf.getString("fieldname");
-	       String idxtype = rf.getString("idxtype");
+	       String idxtype = rf.getString("indextype");
 	       IndexInfo ii = new IndexInfo(idxname, tblname, fldname, idxtype, tx);
 	       
 	       ArrayList indexInfoList;

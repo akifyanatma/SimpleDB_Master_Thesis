@@ -72,4 +72,10 @@ class StatMgr {
       rf.close();
       return new StatInfo(numblocks, numRecs);
    }
+   
+   //Akif
+   public void setDistinctValue(String tableName, String fldName, int distinctValue, TableInfo ti, Transaction tx){
+	   StatInfo si = getStatInfo(tableName, ti, tx);
+	   si.setDistinctValues(fldName, distinctValue);
+   }
 }

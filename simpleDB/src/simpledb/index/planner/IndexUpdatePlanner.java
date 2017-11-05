@@ -113,8 +113,13 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       return 0;
    }
    
+//   public int executeCreateIndex(CreateIndexData data, Transaction tx) {
+//      SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
+//      return 0;
+//   }
+   //Akif
    public int executeCreateIndex(CreateIndexData data, Transaction tx) {
-      SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
-      return 0;
+	   SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), data.indexType(), tx);
+	   return 0;
    }
 }

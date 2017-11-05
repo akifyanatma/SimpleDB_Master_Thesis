@@ -3,6 +3,7 @@ package simpledb.parse;
 import java.util.*;
 import simpledb.query.*;
 import simpledb.record.Schema;
+import simpledb.tx.Transaction;
 
 /**
  * The SimpleDB parser.
@@ -13,6 +14,12 @@ public class Parser {
    
    public Parser(String s) {
       lex = new Lexer(s);
+   }
+   
+   //Akif
+   //Overloaded
+   public Parser(String s, Transaction tx) {
+	   lex = new Lexer(s);
    }
    
 // Methods for parsing predicates, terms, expressions, constants, and fields
@@ -231,15 +238,35 @@ public class Parser {
    
 //  Method for parsing create index commands
    
+//   public CreateIndexData createIndex() {
+//      lex.eatKeyword("index");
+//      String idxname = lex.eatId();
+//      lex.eatKeyword("on");
+//      String tblname = lex.eatId();
+//      lex.eatDelim('(');
+//      String fldname = field();
+//      lex.eatDelim(')');
+//      return new CreateIndexData(idxname, tblname, fldname);
+//   }
+   
+   //Akif
    public CreateIndexData createIndex() {
-      lex.eatKeyword("index");
-      String idxname = lex.eatId();
-      lex.eatKeyword("on");
-      String tblname = lex.eatId();
-      lex.eatDelim('(');
-      String fldname = field();
-      lex.eatDelim(')');
-      return new CreateIndexData(idxname, tblname, fldname);
+	   String idxtype ="";
+	   if(lex.matchId() == false) {
+		   idxtype = lex.eatId();
+	   }
+	   lex.eatKeyword("index");
+	   String idxname = lex.eatId();
+	   lex.eatKeyword("on");
+	   String tblname = lex.eatId();
+	   lex.eatDelim('(');
+	   String fldname = field();
+	   lex.eatDelim(')');
+	   
+	   if(idxtype.length() != 0)
+		   return new CreateIndexData(idxname, tblname, fldname);
+	   else
+		   return new CreateIndexData(idxname, tblname, fldname, idxtype);
    }
 }
 
