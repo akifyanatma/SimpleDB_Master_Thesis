@@ -1302,12 +1302,53 @@ public class GUI {
 	
 	private ArrayList<Integer> generateIntField(int minInterval, int maxInterval, int distinctValue, int recordCount){
 		
+		//NORMAL DAGILIM
+//		//Verilen aralikta olabilecek tum sayilar
+//		ArrayList<Integer> numbers = new ArrayList<>();
+//		for(int i = minInterval; i<= maxInterval;i++)
+//			numbers.add(i);
+//		
+//		//Distinct value sayilari belirleniyor
+//		ArrayList<Integer> distinctNumbers = new ArrayList<>();		
+//		for(int j=0; j<distinctValue; j++){			
+//			Random r = new Random(); 
+//			int rIndex = r.nextInt(numbers.size());
+//			
+//			int randomNumber = numbers.get(rIndex);
+//			
+//			numbers.remove(rIndex);
+//			
+//			distinctNumbers.add(randomNumber);		
+//		}
+//		
+//		ArrayList<Integer> resultList = new ArrayList<>();
+//		
+//		//Sonuc listesinde en az bir kez butun distinct value sayilari bulunmali
+//		resultList.addAll(distinctNumbers);
+//		
+//		//Sonuc listesi dolmadi ise rastgele distinct value sayilarindan secilerek ekleniyor.(normal dagilim)
+//		for(int m=0; m<recordCount-distinctNumbers.size(); m++){
+//			Random rn = new Random();
+//			int rnIndex = rn.nextInt(distinctNumbers.size());
+//			int rnNumber = distinctNumbers.get(rnIndex);
+//			resultList.add(rnNumber);
+//		}
+//		
+//		System.out.println("\n\n" + resultList.size() + "\n\n");
+//		for(int y=0;y<resultList.size();y++)
+//			System.out.println(resultList.get(y));
+//		
+//		return resultList;
+		
+		
+		//UNIFORM DAGILIM
+		//Verilen aralikta olabilecek tum sayilar
 		ArrayList<Integer> numbers = new ArrayList<>();
 		for(int i = minInterval; i<= maxInterval;i++)
 			numbers.add(i);
-			
-		ArrayList<Integer> distinctNumbers = new ArrayList<>();
 		
+		//Distinct value olacak sayilar belirleniyor
+		ArrayList<Integer> distinctNumbers = new ArrayList<>();		
 		for(int j=0; j<distinctValue; j++){			
 			Random r = new Random(); 
 			int rIndex = r.nextInt(numbers.size());
@@ -1319,24 +1360,35 @@ public class GUI {
 			distinctNumbers.add(randomNumber);		
 		}
 		
-		ArrayList<Integer> resultList = new ArrayList<>();
 		
-		resultList.addAll(distinctNumbers);
+		//Record index siralarini karistirma
+		ArrayList<Integer> sortedIndexList = new ArrayList<>();
+		for(int k=0; k<recordCount; k++)
+			sortedIndexList.add(k);
 		
-		
-		for(int m=0; m<recordCount-distinctNumbers.size(); m++){
+		ArrayList<Integer> mixedIndexList = new ArrayList<>();
+		for(int m=0; m<recordCount; m++) {
 			Random rn = new Random();
-			int rnIndex = rn.nextInt(distinctNumbers.size());
-			int rnNumber = distinctNumbers.get(rnIndex);
-			resultList.add(rnNumber);
+			int rnIndex = rn.nextInt(sortedIndexList.size());
+			mixedIndexList.add(sortedIndexList.remove(rnIndex));
 		}
 		
+		//Sonuclari olusturma
+		HashMap<Integer, Integer> resultMap = new HashMap<>();
+		for(int n=0; n<recordCount; n++) {
+			int distincValueIndex = n%distinctNumbers.size();
+			resultMap.put(mixedIndexList.get(n), distinctNumbers.get(distincValueIndex));			
+		}
+		
+		ArrayList<Integer> resultList = new ArrayList<>();
+		for(int key : resultMap.keySet())
+			resultList.add(resultMap.get(key));
+			
 		System.out.println("\n\n" + resultList.size() + "\n\n");
 		for(int y=0;y<resultList.size();y++)
 			System.out.println(resultList.get(y));
 		
-		return resultList;
-		
+		return resultList;		
 	}
 		
 	private ArrayList<String> generateStringField(int minLength, int maxLength, int distinctValue, int recordCount){
