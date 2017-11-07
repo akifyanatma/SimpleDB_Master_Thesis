@@ -25,11 +25,11 @@ public class IdxCoordTest2 {
 		LoadStudentDB.getDataStatistics(tx);
 		tx.commit();
 		
-		testQuery();
+//		testQuery();
 		
 		////**** TEST INDEX COORDINATION. ADD(LOAD)/DROP INDEXES
-//		testCrDrIndex();  // tx.commit, thus stores into the catalog. Next function will remove those entries.
-//		testDrIndex();  // remove from catalog entries and file system if called after testCrIndex. This function should be called seperately with a different TX.
+		testCrDrIndex();  // tx.commit, thus stores into the catalog. Next function will remove those entries.
+		testDrIndex();  // remove from catalog entries and file system if called after testCrIndex. This function should be called seperately with a different TX.
 						// check file system and remove idx files that is intended to romove manually if necessary.
 
 //		testCrManyIndex(); // tx.commit, thus stores into the catalog. Next function will remove those entries.

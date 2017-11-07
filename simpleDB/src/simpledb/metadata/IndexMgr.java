@@ -103,21 +103,22 @@ public class IndexMgr {
 	   RecordFile rf = new RecordFile(ti, tx);
 	   while (rf.next())
 		   if (rf.getString("tablename").equals(tblname)) {
-	       String idxname = rf.getString("indexname");
-	       String fldname = rf.getString("fieldname");
-	       String idxtype = rf.getString("indextype");
-	       IndexInfo ii = new IndexInfo(idxname, tblname, fldname, idxtype, tx);
+			   String idxname = rf.getString("indexname");
+			   String fldname = rf.getString("fieldname");
+			   String idxtype = rf.getString("indextype");
+			   IndexInfo ii = new IndexInfo(idxname, tblname, fldname, idxtype, tx);
 	       
-	       ArrayList indexInfoList;
-	       if(result.containsKey(fldname)) {
-	    	   indexInfoList = result.get(fldname);   
-	       }
-	       else {
-	    	   indexInfoList = new ArrayList<IndexInfo>();   
-	       }
-	       indexInfoList.add(ii);
-    	   result.put(fldname, indexInfoList);
-	   }
+			   ArrayList indexInfoList;
+			   if(result.containsKey(fldname)) {
+				   indexInfoList = result.get(fldname);   
+			   }
+			   else {
+				   indexInfoList = new ArrayList<IndexInfo>(); 
+				   result.put(fldname, indexInfoList);
+			   }
+			   indexInfoList.add(ii);
+    	   
+		   }
 	   rf.close();
 	   return result;
    }

@@ -19,6 +19,7 @@ public class LoadIndex {
 	
 	public static int loadIndex(String tblname, String fldname, String idxname, String idxtype, Transaction tx){	
 		Map<String, ArrayList<IndexInfo>> indexInfoMap = SimpleDB.mdMgr().getIndexInfo_(tblname, tx);
+		
 		ArrayList<IndexInfo> indexInfoList = null;
 		if(indexInfoMap.containsKey(fldname) == true) {
 			indexInfoList = indexInfoMap.get(fldname);

@@ -144,4 +144,9 @@ public class IndexInfo {
    public String getType() {
 	   return idxtype;
    }
+   
+   //Akif
+   public String getIndexName() {
+	   return idxname;
+   }
 }

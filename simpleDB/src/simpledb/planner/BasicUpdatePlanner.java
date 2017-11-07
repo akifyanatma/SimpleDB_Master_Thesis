@@ -1,11 +1,18 @@
 package simpledb.planner;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
+import simpledb.index.DropIndex;
 import simpledb.index.LoadIndex;
+import simpledb.metadata.IndexInfo;
 import simpledb.parse.*;
 import simpledb.query.*;
+import simpledb.record.TableInfo;
 
 /**
  * The basic planner for SQL update statements.
@@ -72,5 +79,10 @@ public class BasicUpdatePlanner implements UpdatePlanner {
    public int executeCreateIndex(CreateIndexData data, Transaction tx) { 
 	   return LoadIndex.loadIndex(data.tableName(), data.fieldName(), data.indexName(),
 			   data.indexType(), tx);
+   }
+   
+   //Akif
+   public int executeDropIndex(DropIndexData data, Transaction tx) {
+	   return DropIndex.dropIndex(data.tableName(), data.fieldName(), data.indexName(), data.allIndex(), tx);	   
    }
 }

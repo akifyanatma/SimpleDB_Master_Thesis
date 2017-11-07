@@ -39,22 +39,45 @@ public class Planner {
     * @param tx the transaction
     * @return an integer denoting the number of affected records
     */
+//   public int executeUpdate(String cmd, Transaction tx) {
+//      Parser parser = new Parser(cmd);
+//      Object obj = parser.updateCmd();
+//      if (obj instanceof InsertData)
+//         return uplanner.executeInsert((InsertData)obj, tx);
+//      else if (obj instanceof DeleteData)
+//         return uplanner.executeDelete((DeleteData)obj, tx);
+//      else if (obj instanceof ModifyData)
+//         return uplanner.executeModify((ModifyData)obj, tx);
+//      else if (obj instanceof CreateTableData)
+//         return uplanner.executeCreateTable((CreateTableData)obj, tx);
+//      else if (obj instanceof CreateViewData)
+//         return uplanner.executeCreateView((CreateViewData)obj, tx);
+//      else if (obj instanceof CreateIndexData)
+//         return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
+//      else
+//         return 0;
+//   }
+   
+   //Akif
+   //Index drop etmek icin ilgili satirlar eklendi.
    public int executeUpdate(String cmd, Transaction tx) {
-      Parser parser = new Parser(cmd);
-      Object obj = parser.updateCmd();
-      if (obj instanceof InsertData)
-         return uplanner.executeInsert((InsertData)obj, tx);
-      else if (obj instanceof DeleteData)
-         return uplanner.executeDelete((DeleteData)obj, tx);
-      else if (obj instanceof ModifyData)
-         return uplanner.executeModify((ModifyData)obj, tx);
-      else if (obj instanceof CreateTableData)
-         return uplanner.executeCreateTable((CreateTableData)obj, tx);
-      else if (obj instanceof CreateViewData)
-         return uplanner.executeCreateView((CreateViewData)obj, tx);
-      else if (obj instanceof CreateIndexData)
-         return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
-      else
-         return 0;
+	      Parser parser = new Parser(cmd);
+	      Object obj = parser.updateCmd();
+	      if (obj instanceof InsertData)
+	         return uplanner.executeInsert((InsertData)obj, tx);
+	      else if (obj instanceof DeleteData)
+	         return uplanner.executeDelete((DeleteData)obj, tx);
+	      else if (obj instanceof ModifyData)
+	         return uplanner.executeModify((ModifyData)obj, tx);
+	      else if (obj instanceof CreateTableData)
+	         return uplanner.executeCreateTable((CreateTableData)obj, tx);
+	      else if (obj instanceof CreateViewData)
+	         return uplanner.executeCreateView((CreateViewData)obj, tx);
+	      else if (obj instanceof CreateIndexData)
+	         return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
+	      else if (obj instanceof DropIndexData)
+		         return uplanner.executeDropIndex((DropIndexData)obj, tx);
+	      else
+	         return 0;
    }
 }
