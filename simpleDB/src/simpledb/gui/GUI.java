@@ -1392,18 +1392,57 @@ public class GUI {
 	}
 		
 	private ArrayList<String> generateStringField(int minLength, int maxLength, int distinctValue, int recordCount){
+		//NORMAL DAGILIM
+//		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+//	
+//		ArrayList<String> distinctWords = new ArrayList<>();
+//		
+//		for(int j=0; j<distinctValue; j++){		
+//			Random r = new Random();
+//			int length = r.nextInt((maxLength - minLength) + 1) + minLength;
+//			
+//			Random rn = new Random();
+//			String word = "";
+//			for(int k=0; k<length; k++){			
+//				int rnIndex = rn.nextInt(alphabet.length);
+//				word+=alphabet[rnIndex];
+//			}
+//			
+//			distinctWords.add(word);		
+//		}
+//		
+//		ArrayList<String> resultList = new ArrayList<>();
+//		
+//		resultList.addAll(distinctWords);
+//		
+//		for(int n=0; n<recordCount-distinctWords.size(); n++){
+//			Random rnd = new Random();
+//			int rndIndex = rnd.nextInt(distinctWords.size());
+//			
+//			String rndName = distinctWords.get(rndIndex);
+//			
+//			resultList.add(rndName);
+//		}
+//		
+//		System.out.println("\n\n" + resultList.size() + "\n\n");
+//		for(int y=0;y<resultList.size();y++)
+//			System.out.println(resultList.get(y));
+//		
+//		return resultList;
 		
+		
+		//UNIFORM DAGILIM
 		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-	
-		ArrayList<String> distinctWords = new ArrayList<>();
 		
+		//Distinct value olacak kelimeler belirleniyor
+		ArrayList<String> distinctWords = new ArrayList<>();
 		for(int j=0; j<distinctValue; j++){		
 			Random r = new Random();
 			int length = r.nextInt((maxLength - minLength) + 1) + minLength;
-			
-			Random rn = new Random();
+						
 			String word = "";
-			for(int k=0; k<length; k++){			
+			for(int k=0; k<length; k++){
+				Random rn = new Random();
 				int rnIndex = rn.nextInt(alphabet.length);
 				word+=alphabet[rnIndex];
 			}
@@ -1411,25 +1450,34 @@ public class GUI {
 			distinctWords.add(word);		
 		}
 		
-		ArrayList<String> resultList = new ArrayList<>();
+		//Record index siralarini karistirma
+		ArrayList<Integer> sortedIndexList = new ArrayList<>();
+		for(int k=0; k<recordCount; k++)
+			sortedIndexList.add(k);
 		
-		resultList.addAll(distinctWords);
-		
-		for(int n=0; n<recordCount-distinctWords.size(); n++){
-			Random rnd = new Random();
-			int rndIndex = rnd.nextInt(distinctWords.size());
-			
-			String rndName = distinctWords.get(rndIndex);
-			
-			resultList.add(rndName);
+		ArrayList<Integer> mixedIndexList = new ArrayList<>();
+		for(int m=0; m<recordCount; m++) {
+			Random rn = new Random();
+			int rnIndex = rn.nextInt(sortedIndexList.size());
+			mixedIndexList.add(sortedIndexList.remove(rnIndex));
 		}
 		
+		//Sonuclari olusturma
+		HashMap<Integer, String> resultMap = new HashMap<>();
+		for(int n=0; n<recordCount; n++) {
+			int distincValueIndex = n%distinctWords.size();
+			resultMap.put(mixedIndexList.get(n), distinctWords.get(distincValueIndex));			
+		}
+		
+		ArrayList<String> resultList = new ArrayList<>();
+		for(int key : resultMap.keySet())
+			resultList.add(resultMap.get(key));
+			
 		System.out.println("\n\n" + resultList.size() + "\n\n");
 		for(int y=0;y<resultList.size();y++)
 			System.out.println(resultList.get(y));
 		
-		return resultList;
-			
+		return resultList;	
 	}
 	
 	//Doldurulacak olan tablonun field isimlerini getirir
