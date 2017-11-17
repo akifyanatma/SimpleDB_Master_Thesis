@@ -100,7 +100,7 @@ public class QueryPanel extends JPanel {
 			}
 		});
 		okButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		okButton.setBounds(1015, 74, 89, 24);
+		okButton.setBounds(989, 70, 89, 24);
 		add(okButton);
 	}
 	
