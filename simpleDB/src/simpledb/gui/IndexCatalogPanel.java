@@ -56,8 +56,23 @@ public class IndexCatalogPanel extends JPanel {
 		
 		ArrayList<TableInfo> tableInfos = SimpleDB.mdMgr().getAllTableInfo(tx);
 		for(TableInfo ti : tableInfos) {
-			String tableName = ti.fileName();
-			//Map<String,ArrayList<IndexInfo>> indexes = SimpleDB.mdMgr().getIndexInfo(tableName, tx);
+			String tblName = ti.fileName();
+			String newtblName="";
+			if(tblName.contains(".tbl"))
+				newtblName = tblName.replace(".tbl", "");
+			Map<String, ArrayList<IndexInfo>> indexes = SimpleDB.mdMgr().getIndexInfo_(newtblName, tx);
+			
+			for(String fldName : indexes.keySet()) {
+				ArrayList<IndexInfo> indexList = indexes.get(fldName);
+				
+				for(IndexInfo ii : indexList) {
+					String idxName = ii.getIndexName();
+					String idxType = ii.getType();
+					tableModel.addRow(new Object[]{tblName, fldName, idxName, idxType});
+				}
+				
+			}
+			
 		}
 		
 		

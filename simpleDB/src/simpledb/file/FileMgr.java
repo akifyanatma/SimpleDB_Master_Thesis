@@ -139,4 +139,17 @@ public class FileMgr {
       }
       return fc;
    }
+   
+   //Akif
+   //File silme yapilir
+   public void deleteFile(String fileName) {  	  
+	   try {
+		   getFile(fileName).close();
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+	   openFiles.remove(fileName);
+	   File dbTable = new File(dbDirectory, fileName);
+	   dbTable.delete();
+   }
 }

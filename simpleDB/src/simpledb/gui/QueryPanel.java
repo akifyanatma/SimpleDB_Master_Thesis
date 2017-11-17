@@ -47,7 +47,7 @@ public class QueryPanel extends JPanel {
 		
 		textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField.setBounds(134, 31, 970, 24);
+		textField.setBounds(108, 35, 970, 24);
 		add(textField);
 		textField.setColumns(10);
 		
@@ -109,7 +109,7 @@ public class QueryPanel extends JPanel {
 		Transaction tx = new Transaction();
 		String[] words = query.split(" ");
 		
-		if(words[0].equals("create") || words[0].equals("insert") || words[0].equals("delete")){
+		if(words[0].equals("create") || words[0].equals("insert") || words[0].equals("delete") || words[0].equals("drop")){
 			SimpleDB.planner().executeUpdate(query, tx);
 			internalPanel.setVisible(false);
 		}

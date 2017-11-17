@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 public class StartupPanel extends JPanel {
 	private JTextField dbNameTextField;
@@ -24,6 +26,7 @@ public class StartupPanel extends JPanel {
 		setLayout(null);
 		
 		JTextPane textPane = new JTextPane();
+		textPane.setBackground(SystemColor.menu);
 		textPane.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textPane.setEditable(false);
 		textPane.setText("You are now in the process of starting the system. After entering the database name, the system will start. Please, enter database name.");

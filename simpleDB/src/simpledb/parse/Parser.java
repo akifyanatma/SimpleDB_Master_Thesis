@@ -188,6 +188,8 @@ public class Parser {
 	       return delete(tx);//Bir tablonun schema bilgisini elde etmek icin tx parametresi gonderiliyor.
 	   else if (lex.matchKeyword("update"))
 		   return modify(tx);//Bir tablonun schema bilgisini elde etmek icin tx parametresi gonderiliyor.
+	   else if(lex.matchKeyword("drop"))
+		   return drop();
 	   else
 	       return create(tx);//Bir tablonun schema bilgisini elde etmek icin tx parametresi gonderiliyor.
    }
@@ -445,15 +447,70 @@ public class Parser {
    
 //  Method for parsing create index commands
    
+//   public CreateIndexData createIndex() {
+//      lex.eatKeyword("index");
+//      String idxname = lex.eatId();
+//      lex.eatKeyword("on");
+//      String tblname = lex.eatId();
+//      lex.eatDelim('(');
+//      String fldname = field();
+//      lex.eatDelim(')');
+//      return new CreateIndexData(idxname, tblname, fldname);
+//   }
+   
+   //Akif
    public CreateIndexData createIndex() {
-      lex.eatKeyword("index");
-      String idxname = lex.eatId();
-      lex.eatKeyword("on");
-      String tblname = lex.eatId();
-      lex.eatDelim('(');
-      String fldname = field();
-      lex.eatDelim(')');
-      return new CreateIndexData(idxname, tblname, fldname);
+	   String idxtype ="";
+	   if(lex.matchKeyword("index") == false) {
+		   idxtype = lex.eatId();
+	   }
+	   lex.eatKeyword("index");
+	   String idxname = lex.eatId();
+	   lex.eatKeyword("on");
+	   String tblname = lex.eatId();
+	   lex.eatDelim('(');
+	   String fldname = field();
+	   lex.eatDelim(')');
+	   
+	   if(idxtype.length() != 0)
+		   return new CreateIndexData(idxname, tblname, fldname, idxtype);
+	   else
+		   return new CreateIndexData(idxname, tblname, fldname, "btree");//default olarak btree tipini verdik.
+   }
+   
+   //Akif
+   private Object drop() {
+      lex.eatKeyword("drop");
+      if (lex.matchKeyword("index") || lex.matchKeyword("indexall"))
+    	  return dropIndex();
+      else {
+    	  return null;
+    	  //Ileride normal bir tablo drop edilmek istenirse buradan fonksiyon cagrisi yapilacak
+      }
+   }
+ 
+   //Akif
+   public DropIndexData dropIndex() {
+	  //Tablo uzerindeki sadece bir tane index tablosu drop edilecek
+	  if(lex.matchKeyword("index")) {
+		  lex.eatKeyword("index");
+		  String idxname = lex.eatId();
+		  lex.eatKeyword("on");
+		  String tblname = lex.eatId();
+		  lex.eatDelim('(');
+		  String fldname = field();
+		  lex.eatDelim(')');
+		  return new DropIndexData(tblname, fldname, idxname);
+	  }
+	  //Tablo uzerindeki butun indexler drop edilecek. 
+	  else {
+		  lex.eatKeyword("indexall");
+		  lex.eatKeyword("on");
+		  String tblname = lex.eatId();
+		  return new DropIndexData(tblname);
+	  }
+	 
+	  
    }
 }
 

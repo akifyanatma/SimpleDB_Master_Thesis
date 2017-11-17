@@ -22,8 +22,11 @@ import java.awt.Component;
 import javax.swing.JTable;
 
 public class ViewPanel extends JPanel {
+	private JPanel internalPanel;
 	private JLabel blockCountLabel;
 	private JLabel recordCountLabel;
+	private JLabel warningLabel;
+	private JTextField textField;
 
 	/**
 	 * Create the panel.
@@ -33,7 +36,7 @@ public class ViewPanel extends JPanel {
 		setFont(new Font("Tahoma", Font.PLAIN, 12));
 		setLayout(null);
 		
-		JPanel internalPanel = new JPanel();
+		internalPanel = new JPanel();
 		internalPanel.setLayout(null);
 		internalPanel.setBounds(29, 119, 1008, 608);
 		add(internalPanel);
@@ -43,13 +46,13 @@ public class ViewPanel extends JPanel {
 		tableNameLabel_1.setBounds(29, 28, 87, 24);
 		add(tableNameLabel_1);
 		
-		JTextField textField = new JTextField();
+		textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		textField.setColumns(10);
 		textField.setBounds(116, 28, 230, 24);
 		add(textField);
 		
-		JLabel warningLabel = new JLabel("Warning!");
+		warningLabel = new JLabel("Warning!");
 		warningLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		warningLabel.setBounds(368, 28, 625, 24);
 		add(warningLabel);
@@ -88,12 +91,14 @@ public class ViewPanel extends JPanel {
 				if(tableName.length() == 0){
 					warningLabel.setText("Please enter table name.");
 					warningLabel.setVisible(true);
+					internalPanel.setVisible(false);
 				}
 				else {
 					boolean thereIsTable = getColumnNames(tableName, viewTableModel);
 					if(thereIsTable == false){
 						warningLabel.setText("\""+tableName+"\" table is not exist in database.");
 						warningLabel.setVisible(true);
+						internalPanel.setVisible(false);
 					}
 					else{
 						internalPanel.setVisible(true);
@@ -162,6 +167,12 @@ public class ViewPanel extends JPanel {
 			tableModel.addRow(rowData);
 		}	
 		tx.commit();
-}
+	}
+	
+	public void editViewPanelComponents() {
+		textField.setText("");
+		warningLabel.setVisible(false);
+		internalPanel.setVisible(false);
+	}
 
 }

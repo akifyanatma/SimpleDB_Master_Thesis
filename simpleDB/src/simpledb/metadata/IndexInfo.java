@@ -1,7 +1,6 @@
 package simpledb.metadata;
 
 import static java.sql.Types.INTEGER;
-import static java.sql.Types.DOUBLE;
 import static simpledb.file.Page.BLOCK_SIZE;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
@@ -24,6 +23,8 @@ public class IndexInfo {
    private Transaction tx;
    private TableInfo ti;
    private StatInfo si;
+   //Akif
+   private String idxtype;
    
    /**
     * Creates an IndexInfo object for the specified index.
@@ -41,14 +42,38 @@ public class IndexInfo {
       si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
    }
    
+   //Akif
+   //Overloaded
+   public IndexInfo(String idxname, String tblname, String fldname,
+                    String idxtype, Transaction tx) {
+	   this.idxname = idxname;
+	   this.fldname = fldname;
+	   this.idxtype = idxtype;
+	   this.tx = tx;
+	   ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
+	   si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
+   }
+   
    /**
     * Opens the index described by this object.
     * @return the Index object associated with this information
     */
+//   public Index open() {
+//      Schema sch = schema();
+//      // Create new HashIndex for hash indexing
+//      return new HashIndex(idxname, sch, tx);
+//   }
+   
+   //Akif
    public Index open() {
-      Schema sch = schema();
-      // Create new HashIndex for hash indexing
-      return new HashIndex(idxname, sch, tx);
+	   Schema sch = schema();
+	   // Create new HashIndex for hash indexing
+	   if (idxtype.equalsIgnoreCase("btree"))
+		   return new BTreeIndex(idxname, sch, tx);
+	   else if (idxtype.equalsIgnoreCase("shash"))
+		   return new HashIndex(idxname, sch, tx);
+	   
+	   return null;
    }
    
    /**
@@ -102,32 +127,26 @@ public class IndexInfo {
     * via the table's metadata.
     * @return the schema of the index records
     */
-//   private Schema schema() {
-//      Schema sch = new Schema();
-//      sch.addIntField("block");
-//      sch.addIntField("id");
-//      if (ti.schema().type(fldname) == INTEGER)
-//         sch.addIntField("dataval");
-//      else {
-//         int fldlen = ti.schema().length(fldname);
-//         sch.addStringField("dataval", fldlen);
-//      }
-//      return sch;
-//   }
+   private Schema schema() {
+      Schema sch = new Schema();
+      sch.addIntField("block");
+      sch.addIntField("id");
+      if (ti.schema().type(fldname) == INTEGER)
+         sch.addIntField("dataval");
+      else {
+         int fldlen = ti.schema().length(fldname);
+         sch.addStringField("dataval", fldlen);
+      }
+      return sch;
+   }
    
    //Akif
-   private Schema schema() {
-	   Schema sch = new Schema();
-	   sch.addIntField("block");
-	   sch.addIntField("id");
-	   if (ti.schema().type(fldname) == INTEGER)
-		   sch.addIntField("dataval");
-	   else if (ti.schema().type(fldname) == DOUBLE)
-		   sch.addDoubleField("dataval");
-	   else {
-		   int fldlen = ti.schema().length(fldname);
-	       sch.addStringField("dataval", fldlen);
-	   }
-	   return sch;
+   public String getType() {
+	   return idxtype;
+   }
+   
+   //Akif
+   public String getIndexName() {
+	   return idxname;
    }
 }

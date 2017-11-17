@@ -3,6 +3,8 @@ package simpledb.metadata;
 import static simpledb.metadata.TableMgr.MAX_NAME;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
+import simpledb.server.SimpleDB;
+
 import java.util.*;
 
 /**
@@ -20,15 +22,28 @@ public class IndexMgr {
     * @param isnew indicates whether this is a new database
     * @param tx the system startup transaction
     */
+//   public IndexMgr(boolean isnew, TableMgr tblmgr, Transaction tx) {
+//      if (isnew) {
+//         Schema sch = new Schema();
+//         sch.addStringField("indexname", MAX_NAME);
+//         sch.addStringField("tablename", MAX_NAME);
+//         sch.addStringField("fieldname", MAX_NAME);
+//         tblmgr.createTable("idxcat", sch, tx);
+//      }
+//      ti = tblmgr.getTableInfo("idxcat", tx);
+//   }
+   
+   //Akif
    public IndexMgr(boolean isnew, TableMgr tblmgr, Transaction tx) {
-      if (isnew) {
-         Schema sch = new Schema();
-         sch.addStringField("indexname", MAX_NAME);
-         sch.addStringField("tablename", MAX_NAME);
-         sch.addStringField("fieldname", MAX_NAME);
-         tblmgr.createTable("idxcat", sch, tx);
-      }
-      ti = tblmgr.getTableInfo("idxcat", tx);
+	   if (isnew) {
+		   Schema sch = new Schema();
+	       sch.addStringField("indexname", 32);
+	       sch.addStringField("tablename", MAX_NAME);
+	       sch.addStringField("fieldname", MAX_NAME);
+	       sch.addStringField("indextype", MAX_NAME);
+	       tblmgr.createTable("idxcat", sch, tx);
+	   }
+	   ti = tblmgr.getTableInfo("idxcat", tx);
    }
    
    /**
@@ -47,6 +62,18 @@ public class IndexMgr {
       rf.setString("tablename", tblname);
       rf.setString("fieldname", fldname);
       rf.close();
+   }
+   
+   //Akif
+   //Overloaded
+   public void createIndex(String idxname, String tblname, String fldname, String idxtype, Transaction tx) {
+	   RecordFile rf = new RecordFile(ti, tx);
+	   rf.insert();
+	   rf.setString("indexname", idxname);
+	   rf.setString("tablename", tblname);
+	   rf.setString("fieldname", fldname);
+	   rf.setString("indextype", idxtype);
+	   rf.close();
    }
    
    /**
@@ -68,5 +95,31 @@ public class IndexMgr {
       }
       rf.close();
       return result;
+   }
+   
+   //Akif
+   public Map<String, ArrayList<IndexInfo>> getIndexInfo_(String tblname, Transaction tx) {
+	   Map<String, ArrayList<IndexInfo>> result = new HashMap<String, ArrayList<IndexInfo>>();
+	   RecordFile rf = new RecordFile(ti, tx);
+	   while (rf.next())
+		   if (rf.getString("tablename").equals(tblname)) {
+			   String idxname = rf.getString("indexname");
+			   String fldname = rf.getString("fieldname");
+			   String idxtype = rf.getString("indextype");
+			   IndexInfo ii = new IndexInfo(idxname, tblname, fldname, idxtype, tx);
+	       
+			   ArrayList indexInfoList;
+			   if(result.containsKey(fldname)) {
+				   indexInfoList = result.get(fldname);   
+			   }
+			   else {
+				   indexInfoList = new ArrayList<IndexInfo>(); 
+				   result.put(fldname, indexInfoList);
+			   }
+			   indexInfoList.add(ii);
+    	   
+		   }
+	   rf.close();
+	   return result;
    }
 }
